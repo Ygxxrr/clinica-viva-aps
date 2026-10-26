@@ -91,7 +91,8 @@ OLD_TEXT = {
 }
 
 def refresh_sample_data():
-    from sqlalchemy import update
+    from sqlalchemy import update, inspect
+    if not inspect(db.engine).has_table('appointment'): return
     changed = False
     for (model, column), mapping in OLD_TEXT.items():
         for old, new in mapping.items():

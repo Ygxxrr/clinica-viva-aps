@@ -206,7 +206,9 @@ def patient_detail(patient_id):
     consultations=[]
     if g.user.role in ('admin','medico'):
         consultations=db.session.scalars(select(Consultation).join(Appointment).where(Appointment.patient_id==patient.id).order_by(Consultation.attended_at.desc())).all()
-    return render_template('patient.html',title=patient.name,patient=patient,consultations=consultations)
+    exams=db.session.scalars(select(ExamRequest).join(Consultation).join(Appointment).where(Appointment.patient_id==patient.id).order_by(ExamRequest.requested_at.desc(),ExamRequest.id.desc())).all()
+    pending=[e for e in exams if e.status in ('Solicitado','Agendado')]
+    return render_template('patient.html',title=patient.name,patient=patient,consultations=consultations,exams=pending+[e for e in exams if e not in pending],pending_count=len(pending))
 
 @app.post('/pacientes/<int:patient_id>/excluir')
 @roles('admin','recepcao')

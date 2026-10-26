@@ -35,6 +35,7 @@ Cadastro: administrador / recepção · Histórico clínico: administrador / mé
 - Abra **Pacientes**. Use a busca por nome, CPF ou outra informação exibida e clique em **Buscar**.
 - Para incluir, clique em **Adicionar paciente**. Preencha os campos obrigatórios. CPF e telefone aceitam somente números e já saem formatados; o CPF precisa ter 11 dígitos válidos e não pode estar repetido, e o telefone tem DDD + 8 dígitos (fixo) ou DDD + 9 dígitos (celular). O e-mail, quando informado, precisa ter @. O endereço é dividido em logradouro, número (ou S/N), complemento, bairro, cidade, estado e ponto de referência. Em **Alergias**, digite livremente as alergias separadas por vírgula.
 - Salve. O sistema cria automaticamente um prontuário único para o paciente.
+- Em **Detalhes / Prontuário**, a seção **Exames** lista todos os exames do paciente, com os pendentes no topo. A recepção vê situação e datas; o resultado aparece apenas para médico e administrador.
 - Para remover um paciente, use **Excluir** e confirme. Quem nunca teve agendamento é apagado; quem tem histórico é arquivado, sai da lista e do agendamento, e pode voltar em **Ver arquivados → Restaurar**.
 - Para alterar os dados, use **Editar**. Para abrir o histórico, use **Prontuário**; na recepção, a ação aparece como **Detalhes**.
 - No prontuário, médico e administrador podem salvar anotações gerais e alergias. A linha do tempo apresenta consultas de diferentes médicos, com queixa, diagnóstico, conduta e quantidade de itens clínicos vinculados.

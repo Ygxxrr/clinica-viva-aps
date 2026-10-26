@@ -40,7 +40,7 @@ Os números seguem a seção “Dados a considerar” do PDF. A coluna de evidê
 | 34 | Cancelado não gera consulta | services.attend; teste de integração de cancelamento |
 | 35 | Identificar faltantes | Agenda → filtro Não compareceu |
 | 36 | Histórico completo do paciente | /pacientes/<id>; linha do tempo de consultas |
-| 37 | Exames solicitados por paciente | /solicitacoes?patient_id=<id> |
+| 37 | Exames solicitados por paciente | Seção Exames na página do paciente (pendentes primeiro; resultado visível só para médico e administrador) e /solicitacoes?patient_id=<id> |
 | 38 | Identificar exames não realizados | /solicitacoes?pending=1; Solicitado e Agendado. Cancelados são exibidos no filtro geral |
 | 39 | Medicamentos da consulta | /consultas/<id>; prescrições e itens |
 | 40 | Faturamento por período | /relatorios; cobranças pela data de emissão |

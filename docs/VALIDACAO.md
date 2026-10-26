@@ -10,7 +10,7 @@
 
 ## Ambiente publicado
 
-- URL: https://clinica-viva-aps.vercel.app
+- URL: https://clinica-silva.vercel.app
 - Hospedagem: Vercel, aplicação Flask.
 - Persistência: PostgreSQL Neon, plano Free, região São Paulo (gru1).
 - Rota `/health`: HTTP 200, banco conectado.

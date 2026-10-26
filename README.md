@@ -2,7 +2,7 @@
 
 Sistema acadêmico de gestão de clínica médica desenvolvido para Análise e Projeto de Sistemas II. Integra pacientes, agenda, prontuários, exames, prescrições, procedimentos, convênios e financeiro.
 
-Sistema publicado: **https://clinica-viva-aps.vercel.app**
+Sistema publicado: **https://clinica-silva.vercel.app**
 
 Repositório: **https://github.com/Ygxxrr/clinica-viva-aps**
 

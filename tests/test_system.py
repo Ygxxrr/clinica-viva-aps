@@ -117,6 +117,15 @@ class SystemTest(unittest.TestCase):
         db.session.expire_all();self.assertIsNone(db.session.get(Patient,busy.id).archived_at)
         self.login('medico@clinicasilva.com.br')
         self.assertEqual(self.post(f'/pacientes/{busy.id}/excluir').status_code,403)
+    def test_patient_page_shows_exams(self):
+        e=db.session.scalar(select(ExamRequest).where(ExamRequest.status=='Realizado'))
+        pid=e.patient.id
+        self.login('recepcao@clinicasilva.com.br')
+        page=self.client.get(f'/pacientes/{pid}').get_data(as_text=True)
+        self.assertIn('<h2>Exames</h2>',page);self.assertIn(e.exam.name,page)
+        self.assertNotIn(e.result,page)
+        self.login('medico@clinicasilva.com.br')
+        self.assertIn(e.result,self.client.get(f'/pacientes/{pid}').get_data(as_text=True))
     def test_invalid_cpf(self):
         with self.assertRaises(BusinessError):cpf_digits('11111111111')
         with self.assertRaises(BusinessError):cpf_digits('12345678900')

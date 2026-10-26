@@ -112,7 +112,7 @@ def cover(title,subtitle):
       Paragraph(subtitle,ParagraphStyle(name='CoverSub',fontName='Body',fontSize=12,leading=20,textColor=MUTED,spaceAfter=35)),
       Paragraph('Análise e Projeto de Sistemas II<br/>26 de outubro de 2026',styles['Text']),
       Spacer(1,30),Paragraph('Protótipo acadêmico com dados fictícios.<br/>Nomes completos e RGMs do grupo: preencher com os integrantes reais.',styles['Text']),
-      Spacer(1,25),Paragraph('Sistema: https://clinica-viva-aps.vercel.app<br/>Código: https://github.com/Ygxxrr/clinica-viva-aps',styles['Text']),PageBreak()]
+      Spacer(1,25),Paragraph('Sistema: https://clinica-silva.vercel.app<br/>Código: https://github.com/Ygxxrr/clinica-viva-aps',styles['Text']),PageBreak()]
 
 def build(name,title,subtitle,sources):
     doc=SimpleDocTemplate(str(OUT/name),pagesize=A4,rightMargin=46,leftMargin=46,topMargin=47,bottomMargin=55,title=title,author='Clínica Silva - Projeto acadêmico')
