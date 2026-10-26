@@ -11,7 +11,7 @@ from pathlib import Path
 import subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
-ROOT_FILES=['.gitignore','.vercelignore','.env.example','README.md','requirements.txt','requirements-docs.txt','vercel.json','app.py','models.py','services.py','catalog.py','seed.py','clock_local.py']
+ROOT_FILES=['.gitignore','.vercelignore','.env.example','.python-version','iniciar.cmd','README.md','requirements.txt','requirements-docs.txt','vercel.json','app.py','models.py','services.py','catalog.py','seed.py','clock_local.py']
 FOLDERS=['templates','public','docs','scripts','tests']
 
 def gh_api(endpoint,method='GET',data=None):
