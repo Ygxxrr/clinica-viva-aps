@@ -1,0 +1,10 @@
+digraph G {
+graph [rankdir=TB, bgcolor="white", pad="0.5", nodesep="0.6", ranksep="1.0", splines=polyline, fontname="Arial", fontsize=22, label="Clínica Viva · Diagrama de classes", labelloc=t];
+node [shape=plain, fontname="Arial", fontsize=12];
+edge [fontname="Arial", fontsize=10, color="#719487", fontcolor="#47695A", arrowsize=0.7, dir=none];
+subgraph cluster_2 { label="Financeiro"; color="#D5E6DC"; style="rounded"; fontcolor="#638C76"; fontsize=16; margin=25;
+Charge [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#76A58D" BGCOLOR="#FFFFFF"><TR><TD BGCOLOR="#EAF4ED"><B>Charge</B></TD></TR><TR><TD HEIGHT="1" BGCOLOR="#76A58D"></TD></TR><TR><TD ALIGN="LEFT">+id: Integer [PK]</TD></TR><TR><TD ALIGN="LEFT">+consultation_id: Integer [FK]</TD></TR><TR><TD ALIGN="LEFT">+description: String</TD></TR><TR><TD ALIGN="LEFT">+total: Decimal</TD></TR><TR><TD ALIGN="LEFT">+insurance_id: Integer [FK, optional]</TD></TR><TR><TD ALIGN="LEFT">+covered: Decimal</TD></TR><TR><TD ALIGN="LEFT">+due_date: Date</TD></TR><TR><TD ALIGN="LEFT">+created_at: Date</TD></TR><TR><TD ALIGN="LEFT">/patient_share: Decimal</TD></TR><TR><TD ALIGN="LEFT">/paid: Decimal</TD></TR><TR><TD ALIGN="LEFT">/balance: Decimal</TD></TR><TR><TD ALIGN="LEFT">/patient_balance: Decimal</TD></TR><TR><TD ALIGN="LEFT">/insurance_balance: Decimal</TD></TR></TABLE>>];
+Payment [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7" COLOR="#76A58D" BGCOLOR="#FFFFFF"><TR><TD BGCOLOR="#EAF4ED"><B>Payment</B></TD></TR><TR><TD HEIGHT="1" BGCOLOR="#76A58D"></TD></TR><TR><TD ALIGN="LEFT">+id: Integer [PK]</TD></TR><TR><TD ALIGN="LEFT">+charge_id: Integer [FK]</TD></TR><TR><TD ALIGN="LEFT">+paid_at: Date</TD></TR><TR><TD ALIGN="LEFT">+amount: Decimal</TD></TR><TR><TD ALIGN="LEFT">+method: String</TD></TR><TR><TD ALIGN="LEFT">+status: String</TD></TR></TABLE>>];
+}
+Charge -> Payment [ taillabel="1", headlabel="0..*", label="recebe", labeldistance=2.0];
+}

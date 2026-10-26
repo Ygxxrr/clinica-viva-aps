@@ -1,0 +1,82 @@
+@startuml
+left to right direction
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam actorStyle awesome
+skinparam usecase {
+ BackgroundColor #EFF8F3
+ BorderColor #398D78
+ FontColor #21483C
+}
+skinparam rectangle {
+ BorderColor #86B5A1
+ FontColor #21483C
+}
+title Clínica Viva — Diagrama de casos de uso
+actor "Recepção" as Reception
+actor "Médico" as Doctor
+actor "Financeiro" as Finance
+actor "Administrador" as Admin
+Admin --|> Reception
+Admin --|> Doctor
+Admin --|> Finance
+rectangle "Sistema de gestão de clínica médica" {
+usecase "UC01\nAutenticar usuário" as Login
+usecase "UC02\nManter paciente" as Patient
+usecase "Criar prontuário\nna inclusão" as Record
+usecase "UC03\nVincular convênio" as Insurance
+usecase "UC04\nAgendar consulta" as Schedule
+usecase "Validar vínculos e\ndisponibilidade" as Availability
+usecase "UC05\nAtualizar situação\ndo agendamento" as Status
+usecase "UC06\nRegistrar consulta" as Attend
+usecase "Validar agendamento\nativo e autoria" as Active
+usecase "UC07\nConsultar histórico" as History
+usecase "UC08\nManter prontuário\ne alergias" as Allergy
+usecase "UC09\nSolicitar exame" as Exam
+usecase "UC10\nAcompanhar exames\ne resultados" as Result
+usecase "UC11\nPrescrever medicamentos" as Prescription
+usecase "UC12\nRegistrar procedimento" as Procedure
+usecase "UC13\nEmitir cobrança" as Charge
+usecase "UC14\nRegistrar pagamento" as Payment
+usecase "Validar responsabilidade\ne saldo" as Balance
+usecase "UC15\nConsultar pendências" as Pending
+usecase "UC16\nGerar relatórios" as Reports
+usecase "UC17\nExportar / imprimir" as Export
+usecase "UC18\nManter cadastros de apoio" as Catalog
+usecase "UC19\nConsultar atividades" as Audit
+}
+Reception --> Login
+Doctor --> Login
+Finance --> Login
+Reception --> Patient
+Reception --> Insurance
+Reception --> Schedule
+Reception --> Status
+Patient ..> Record : <<include>>
+Schedule ..> Availability : <<include>>
+Doctor --> Attend
+Doctor --> History
+Doctor --> Allergy
+Doctor --> Exam
+Doctor --> Result
+Doctor --> Prescription
+Doctor --> Procedure
+Attend ..> Active : <<include>>
+Exam ..> Attend : <<extend>>
+Prescription ..> Attend : <<extend>>
+Procedure ..> Attend : <<extend>>
+Finance --> Charge
+Finance --> Payment
+Finance --> Pending
+Finance --> Reports
+Finance --> Export
+Payment ..> Balance : <<include>>
+Export ..> Reports : <<extend>>
+Admin --> Catalog
+Admin --> Audit
+note bottom of Attend
+Exames, prescrições e procedimentos são opcionais.
+Na interface, são adicionados à consulta já registrada.
+end note
+@enduml

@@ -1,0 +1,238 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 70
+skinparam class {
+ BackgroundColor #F0F8F3
+ BorderColor #468C75
+ FontColor #234D3C
+}
+skinparam package {
+ BorderColor #A8C7B5
+ BackgroundColor #FAFCFA
+ FontColor #4B745C
+}
+title Clínica Viva — Diagrama de classes da implementação
+package "Cadastros e estrutura" {
+class Patient {
+  +id: Integer [PK]
+  +cpf: String [unique]
+  +name: String
+  +birth_date: Date
+  +sex: String
+  +phone: String
+  +email: String [optional]
+  +address: String
+}
+class MedicalRecord {
+  +id: Integer [PK]
+  +patient_id: Integer [FK, unique]
+  +created_at: DateTime
+  +notes: Text [optional]
+}
+class Allergy {
+  +id: Integer [PK]
+  +name: String [unique]
+  +description: Text [optional]
+}
+class PatientInsurance {
+  +id: Integer [PK]
+  +patient_id: Integer [FK]
+  +insurance_id: Integer [FK]
+  +card_number: String
+  +joined_at: Date
+  +status: String
+}
+class Insurance {
+  +id: Integer [PK]
+  +name: String
+  +cnpj: String [unique]
+  +phone: String
+}
+class Professional {
+  +id: Integer [PK]
+  +name: String
+  +cpf: String [unique]
+  +phone: String
+  +email: String
+  +birth_date: Date
+  +registration: String
+  +kind: String
+  +crm: String [optional]
+  +crm_state: String [optional]
+}
+class Specialty {
+  +id: Integer [PK]
+  +name: String [unique]
+  +description: Text [optional]
+}
+class Unit {
+  +id: Integer [PK]
+  +name: String
+  +address: String
+  +phone: String
+  +hours: String
+}
+}
+package "Atendimento" {
+class Appointment {
+  +id: Integer [PK]
+  +patient_id: Integer [FK]
+  +doctor_id: Integer [FK]
+  +specialty_id: Integer [FK]
+  +unit_id: Integer [FK]
+  +starts_at: DateTime
+  +status: String
+  +notes: Text [optional]
+}
+class Consultation {
+  +id: Integer [PK]
+  +appointment_id: Integer [FK, unique]
+  +attended_at: DateTime
+  +complaint: Text
+  +notes: Text [optional]
+  +diagnosis: Text
+  +conduct: Text
+  /patient: Patient
+  /doctor: Professional
+}
+class Exam {
+  +id: Integer [PK]
+  +name: String
+  +description: Text [optional]
+  +kind: String
+}
+class ExamRequest {
+  +id: Integer [PK]
+  +consultation_id: Integer [FK]
+  +exam_id: Integer [FK]
+  +requested_at: Date
+  +status: String
+  +performed_at: Date [optional]
+  +result: Text [optional]
+  /patient: Patient
+}
+class Medication {
+  +id: Integer [PK]
+  +name: String
+  +active_ingredient: String
+  +manufacturer: String
+  +presentation: String
+}
+class Prescription {
+  +id: Integer [PK]
+  +consultation_id: Integer [FK]
+  +created_at: Date
+  +notes: Text [optional]
+}
+class PrescriptionItem {
+  +id: Integer [PK]
+  +prescription_id: Integer [FK]
+  +medication_id: Integer [FK]
+  +quantity: Integer
+  +dose: String
+  +frequency: String
+  +duration: String
+  +notes: Text [optional]
+}
+class Procedure {
+  +id: Integer [PK]
+  +name: String
+  +description: Text [optional]
+  +standard_price: Decimal
+}
+class PerformedProcedure {
+  +id: Integer [PK]
+  +consultation_id: Integer [FK]
+  +procedure_id: Integer [FK]
+  +professional_id: Integer [FK]
+  +performed_at: Date
+  +charged_price: Decimal
+}
+}
+package "Financeiro" {
+class Charge {
+  +id: Integer [PK]
+  +consultation_id: Integer [FK]
+  +description: String
+  +total: Decimal
+  +insurance_id: Integer [FK, optional]
+  +covered: Decimal
+  +due_date: Date
+  +created_at: Date
+  /patient_share: Decimal
+  /paid: Decimal
+  /balance: Decimal
+  /patient_balance: Decimal
+  /insurance_balance: Decimal
+}
+class Payment {
+  +id: Integer [PK]
+  +charge_id: Integer [FK]
+  +paid_at: Date
+  +amount: Decimal
+  +method: String
+  +status: String
+}
+}
+package "Acesso e rastreabilidade" {
+class User {
+  +id: Integer [PK]
+  +name: String
+  +email: String [unique]
+  +password_hash: String
+  +role: String
+  +professional_id: Integer [FK, optional]
+  +set_password(password)
+  +verify_password(password): bool
+}
+class AuditLog {
+  +id: Integer [PK]
+  +user_id: Integer [FK]
+  +action: String
+  +created_at: DateTime
+}
+}
+Patient "1" -- "1" MedicalRecord : possui
+Patient "1" -- "0..*" Appointment : agenda
+Professional "1" -- "0..*" Appointment : médico responsável
+Specialty "1" -- "0..*" Appointment : especialidade
+Unit "1" -- "0..*" Appointment : local
+Appointment "1" -- "0..1" Consultation : origina
+Patient "1" -- "0..*" PatientInsurance : possui
+Insurance "1" -- "0..*" PatientInsurance : atende
+Patient "0..*" -- "0..*" Allergy : patient_allergy
+Professional "0..*" -- "0..*" Specialty : doctor_specialty
+Professional "0..*" -- "1..*" Unit : professional_unit
+Unit "0..*" -- "1..*" Specialty : unit_specialty
+Consultation "1" -- "0..*" ExamRequest : solicita
+Exam "1" -- "0..*" ExamRequest : tipo de exame
+Consultation "1" -- "0..*" Prescription : gera
+Prescription "1" *-- "1..*" PrescriptionItem : contém
+Medication "1" -- "0..*" PrescriptionItem : é prescrito
+Consultation "1" -- "0..*" PerformedProcedure : envolve
+Procedure "1" -- "0..*" PerformedProcedure : catálogo
+Professional "1" -- "0..*" PerformedProcedure : executa
+Consultation "1" -- "0..*" Charge : gera
+Insurance "0..1" -- "0..*" Charge : cobre
+Charge "1" -- "0..*" Payment : recebe
+Professional "0..1" -- "0..*" User : identifica perfil
+User "1" -- "0..*" AuditLog : realiza
+note bottom of Professional
+Médico: CRM e UF obrigatórios; uma ou mais especialidades.
+Os demais profissionais não possuem especialidades médicas.
+end note
+note bottom of Consultation
+patient e doctor são propriedades derivadas do agendamento.
+Uma consulta não duplica esses identificadores.
+end note
+note bottom of Charge
+patient_share = total - covered
+balance = total - pagamentos Pago
+Saldos de paciente e convênio são independentes.
+end note
+@enduml
