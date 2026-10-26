@@ -38,7 +38,7 @@ Paciente é uma entidade do domínio, sem portal próprio nesta implementação.
 | RF15 | Cadastrar exames | Código, nome, descrição e tipo |
 | RF16 | Solicitar e acompanhar exames | Vincular pedido à consulta e ao exame, guardar datas, situação e resultado |
 | RF17 | Identificar exames pendentes | Filtrar Solicitado/Agendado e paciente |
-| RF18 | Cadastrar medicamentos | Nome, princípio ativo, fabricante e apresentação |
+| RF18 | Cadastrar medicamentos | Nome, princípio ativo, fabricante e apresentação; cadastro feito por médico ou administrador |
 | RF19 | Criar prescrições com múltiplos itens | Cada item guarda medicamento, quantidade, dose, frequência, duração e observações |
 | RF20 | Cadastrar procedimentos | Nome, descrição e valor padrão |
 | RF21 | Registrar procedimentos realizados | Consulta, responsável, data e valor efetivo |

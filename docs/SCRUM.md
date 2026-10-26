@@ -34,7 +34,7 @@ Permitir demonstrar a jornada integrada de um paciente, do cadastro ao acompanha
 | 2 | Agenda e consulta | RF12–RF14 | Agendar e atender sem conflito ou cancelamento inválido |
 | 3 | Continuidade clínica | RF03–RF04, RF15–RF21 | Exames, prescrições e procedimentos vinculados ao atendimento |
 | 4 | Financeiro e relatórios | RF22–RF29 | Cobrar e receber sem exceder saldos; relatório confere |
-| 5 | Acesso, qualidade e publicação | RF01, RF30; RNF01–RNF12 | Perfis autorizados, testes aprovados e demonstração acessível |
+| 5 | Acesso, qualidade, ajustes e publicação | RF01, RF30, RF31; RNF01–RNF12 | Perfis autorizados, cadastro de paciente validado, exclusão/arquivamento seguro, testes aprovados e sistema publicado |
 
 ## Planejamento emergencial sugerido — 26/10/2026
 
@@ -45,9 +45,32 @@ Os intervalos são janelas de planejamento, não registros de reuniões ou datas
 | 1 — Fundação | 26/10, 12h–13h | Estruturar dados e cadastro | RF02–RF11 | models.py, catalog.py e formulários |
 | 2 — Jornada clínica | 26/10, 13h–14h | Conectar agenda ao prontuário | RF12–RF21 | services.py, agenda e consultas |
 | 3 — Gestão financeira | 26/10, 14h–15h | Controlar valores e indicadores | RF22–RF29 | Cobrança, pagamento, relatórios e CSV |
-| 4 — Validação e apresentação | 26/10, 15h–16h30 | Validar e demonstrar o incremento | RF01/RF30 e não funcionais | Testes, perfis, documentação e deploy quando concluído |
+| 4 — Validação, ajustes e entrega | 26/10, 15h–16h30 | Validar o incremento e aplicar os ajustes da revisão | RF01, RF30, RF31, ajustes em RF02/RF03/RF04 e não funcionais | Testes, perfis, ajustes do cadastro, documentação e deploy |
 
 Como as funcionalidades foram construídas em conjunto, a existência do código não comprova entrega em cada janela. Registre as datas reais de revisão e aceite após a validação do grupo.
+
+## Regras de negócio entregues por sprint
+
+| Sprint | Regras de negócio | Decisões adicionais |
+|---|---|---|
+| 1 — Fundação | RN01 CPF único; RN03 médico com uma ou mais especialidades; RN04 vínculo paciente–convênio; RN05 prontuário e alergias; RN15 profissionais e especialidades em várias unidades | — |
+| 2 — Jornada clínica | RN02 consulta com um paciente e um médico; RN06 cancelado não gera consulta; RN07 exames ligados à consulta; RN08 situação e resultado do exame; RN09 e RN10 prescrição com itens; RN11 valor efetivo do procedimento | DA01–DA06, DA13, DA14 |
+| 3 — Gestão financeira | RN12 várias cobranças e pagamentos; RN13 dados do pagamento; RN14 cobertura do convênio e parte do paciente | DA07–DA11 |
+| 4 — Validação, ajustes e entrega | Reforço de RN01 e RN05 com as novas validações | DA12, DA15, DA16 |
+
+## Ajustes incorporados na Sprint 4
+
+A revisão do incremento gerou novos itens de backlog, priorizados e entregues dentro da Sprint 4:
+
+| Requisito / regra | Ajuste | Resultado |
+|---|---|---|
+| RF02, RN01 | CPF e telefone aceitam só números e tamanho correto; e-mail exige @ | Máscara na tela e validação repetida no servidor (DA15) |
+| RF02 | Endereço dividido em logradouro, número, complemento, bairro, cidade, estado e ponto de referência | Cada parte validada e endereço completo mantido para as listas (DA16) |
+| RF03, RN05 | Alergias digitadas em texto livre | Cada alergia é associada ao catálogo ou incluída nele, mantendo a relação muitos para muitos |
+| RF31, DA12 | Excluir paciente | Sem histórico: exclusão; com histórico: arquivamento com restauração, preservando consultas e financeiro |
+| RF04, RF17 | Exames na ficha do paciente | Recepção acompanha situação e datas; resultado visível só para médico e administrador |
+| RF18 | Médico cadastra medicamentos | Quem prescreve pode manter o catálogo de medicamentos |
+| RNF06 | Remoção das marcações de demonstração e novo endereço do sistema | Interface final publicada em clinica-silva.vercel.app |
 
 ## Eventos e artefatos a demonstrar
 
