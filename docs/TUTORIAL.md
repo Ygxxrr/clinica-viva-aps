@@ -4,7 +4,7 @@ Navegação e funcionalidades da versão Roxo Aurora.
 
 ## Como começar
 
-Entre com um dos perfis de demonstração. Todos usam a senha `Clinica2026!`. Use somente dados fictícios.
+Entre com um dos perfis de acesso. Todos usam a senha `Clinica2026!`.
 
 | Perfil | E-mail | O que pode fazer |
 | --- | --- | --- |
@@ -33,8 +33,9 @@ Se não houver horários na data, a tela exibe uma mensagem. Isso não é erro: 
 
 Cadastro: administrador / recepção · Histórico clínico: administrador / médico
 - Abra **Pacientes**. Use a busca por nome, CPF ou outra informação exibida e clique em **Buscar**.
-- Para incluir, clique em **Adicionar paciente**. Preencha os campos obrigatórios. O CPF precisa ter 11 dígitos válidos e não pode estar repetido.
+- Para incluir, clique em **Adicionar paciente**. Preencha os campos obrigatórios. CPF e telefone aceitam somente números e já saem formatados; o CPF precisa ter 11 dígitos válidos e não pode estar repetido, e o telefone tem DDD + 8 dígitos (fixo) ou DDD + 9 dígitos (celular). O e-mail, quando informado, precisa ter @. O endereço é dividido em logradouro, número (ou S/N), complemento, bairro, cidade, estado e ponto de referência. Em **Alergias**, digite livremente as alergias separadas por vírgula.
 - Salve. O sistema cria automaticamente um prontuário único para o paciente.
+- Para remover um paciente, use **Excluir** e confirme. Quem nunca teve agendamento é apagado; quem tem histórico é arquivado, sai da lista e do agendamento, e pode voltar em **Ver arquivados → Restaurar**.
 - Para alterar os dados, use **Editar**. Para abrir o histórico, use **Prontuário**; na recepção, a ação aparece como **Detalhes**.
 - No prontuário, médico e administrador podem salvar anotações gerais e alergias. A linha do tempo apresenta consultas de diferentes médicos, com queixa, diagnóstico, conduta e quantidade de itens clínicos vinculados.
 
@@ -92,7 +93,7 @@ Administrador / médico
 
 O catálogo fica em **Cadastros → Medicamentos**. O princípio ativo, o fabricante e a apresentação pertencem ao catálogo. Quantidade, dose, frequência e duração pertencem ao item de cada prescrição.
 
-Os medicamentos pré-carregados são demonstrativos. A impressão da consulta não é uma receita eletrônica assinada ou válida para uso clínico.
+A impressão da consulta não é uma receita eletrônica assinada ou válida para uso clínico.
 
 ## Registrar execução e valor efetivo
 
@@ -166,7 +167,7 @@ O administrador encontra **Registro de atividades** no menu Cadastros. A tela mo
 
 - **Acesse como administrador.** Mostre o Início, a seleção de dia e o cartão de atendimento. Explique que os perfis têm acessos diferentes.
 - **Abra Ana Clara Martins em Pacientes.** Mostre convênio, alergia e histórico. Explique o prontuário único e os relacionamentos muitos para muitos.
-- **Abra um agendamento ativo na Agenda.** Registre queixa, diagnóstico e conduta explicitamente fictícios. Salve e mostre a situação Realizado.
+- **Abra um agendamento ativo na Agenda.** Registre queixa, diagnóstico e conduta. Salve e mostre a situação Realizado.
 - **Na consulta recém-criada,** solicite um exame, crie uma prescrição com dois medicamentos e registre um procedimento com preço diferente do padrão.
 - **No Financeiro,** crie uma cobrança de R$ 200 para essa consulta com cobertura de R$ 120 do convênio ativo de Ana. Registre PIX de R$ 80 e Convênio de R$ 120 e confira saldo zero.
 - **Abra Relatórios.** Filtre a data de hoje e explique faturamento emitido versus recebimentos. Mostre agrupamentos e procedimentos.
@@ -176,7 +177,7 @@ Ensaie antes. Um agendamento já atendido não pode ser atendido novamente. Se n
 
 ## O que foi testado e o que não se deve prometer
 
-A suíte de integração verifica telas, acesso por perfil, CSRF, CPF, prontuário automático, conflito de agenda, bloqueio de cancelamentos inválidos e o fluxo clínico-financeiro. O fluxo publicado também foi testado com dados fictícios. Isso não garante ausência de erros em todos os dispositivos, situações ou operações simultâneas.
+A suíte de integração verifica telas, acesso por perfil, CSRF, CPF, prontuário automático, conflito de agenda, bloqueio de cancelamentos inválidos e o fluxo clínico-financeiro. O fluxo publicado também foi testado de ponta a ponta. Isso não garante ausência de erros em todos os dispositivos, situações ou operações simultâneas.
 
 - Não há recuperação de senha, gestão completa de usuários, integrações de laboratório ou operadoras, assinatura digital de receita, pagamento bancário, envio de mensagens ou upload de laudos.
 - O sistema não exclui registros clínicos ou financeiros pela interface; cancelamentos preservam o histórico.

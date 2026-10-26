@@ -19,6 +19,14 @@ class Patient {
   +phone: String
   +email: String
   +address: String
+  +street: String
+  +number: String
+  +complement: String
+  +neighborhood: String
+  +city: String
+  +state: String
+  +reference: String
+  +archived_at: DateTime
 }
 class MedicalRecord {
   +id: Integer
@@ -224,4 +232,4 @@ User "1" -- "0..*" AuditLog : realiza
 - classes.svg: versão vetorial, quando renderizada.
 - casos-de-uso.puml e casos-de-uso.svg: atores e funcionalidades.
 
-Para regenerar os atributos e fontes UML/DOT: `python scripts/generate_diagrams.py`. Os SVGs são renderizados localmente com Graphviz (Viz.js), com a mesma estrutura de classes e associações.
+Para regenerar os atributos e fontes UML/DOT: `python scripts/generate_diagrams.py`. Os SVGs são renderizados localmente com Graphviz (Viz.js), com a mesma estrutura de classes e associações.

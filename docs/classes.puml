@@ -27,6 +27,14 @@ class Patient {
   +phone: String
   +email: String [optional]
   +address: String
+  +street: String [optional]
+  +number: String [optional]
+  +complement: String [optional]
+  +neighborhood: String [optional]
+  +city: String [optional]
+  +state: String [optional]
+  +reference: String [optional]
+  +archived_at: DateTime [optional]
 }
 class MedicalRecord {
   +id: Integer [PK]
@@ -235,4 +243,4 @@ patient_share = total - covered
 balance = total - pagamentos Pago
 Saldos de paciente e convênio são independentes.
 end note
-@enduml
+@enduml

@@ -7,7 +7,7 @@ O diagrama UML em `casos-de-uso.puml` representa os atores externos e as funcion
 | ID | Caso de uso | Ator principal | Resultado |
 |---|---|---|---|
 | UC01 | Autenticar usuário | Todos | Sessão do perfil iniciada |
-| UC02 | Manter paciente | Recepção | Cadastro e prontuário criado na inclusão |
+| UC02 | Manter paciente | Recepção | Inclusão com prontuário automático, edição, exclusão ou arquivamento e restauração |
 | UC03 | Vincular convênio ao paciente | Recepção | Carteirinha, adesão e situação registradas |
 | UC04 | Agendar consulta | Recepção | Horário disponível reservado |
 | UC05 | Atualizar situação do agendamento | Recepção | Confirmação, cancelamento ou falta registrados |
@@ -27,6 +27,14 @@ O diagrama UML em `casos-de-uso.puml` representa os atores externos e as funcion
 | UC19 | Consultar atividades | Administrador | Operações realizadas identificadas por usuário e data |
 
 Autenticação é uma precondição dos casos de uso operacionais; o diagrama evita ligar cada operação a “Autenticar” com include, pois não se refaz o login a cada clique. Validações obrigatórias de agenda e saldo aparecem como casos incluídos. Exames, prescrições e procedimentos usam extend sobre o registro do atendimento para indicar comportamento clínico opcional no contexto da consulta; na interface são adicionados após salvar o registro principal.
+
+## UC02 — Manter paciente
+
+- Precondições: usuário de recepção ou administrador.
+- Fluxo principal: informar nome, CPF, nascimento, sexo, telefone, e-mail, endereço (logradouro, número, complemento, bairro, cidade, estado, ponto de referência) e alergias; validar os campos; salvar paciente e criar o prontuário.
+- Alternativas: CPF com letras, tamanho errado, dígitos verificadores incorretos ou repetido é rejeitado; telefone sem DDD ou com tamanho errado é rejeitado; e-mail sem @ é rejeitado.
+- Exclusão: após confirmação, paciente sem agendamentos é excluído; paciente com histórico é arquivado, seus agendamentos futuros são cancelados e ele pode ser restaurado em Ver arquivados.
+- Pós-condição: paciente ativo disponível para agendamento, ou arquivado com histórico preservado.
 
 ## UC04 — Agendar consulta
 

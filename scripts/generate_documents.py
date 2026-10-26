@@ -22,6 +22,12 @@ if (FONT_ROOT/'segoeui.ttf').exists():
     for name,file in [('Body','segoeui.ttf'),('BodyBold','segoeuib.ttf'),('BodyItalic','segoeuii.ttf'),('Mono','consola.ttf')]:
         pdfmetrics.registerFont(TTFont(name,str(FONT_ROOT/file)))
     pdfmetrics.registerFontFamily('Body',normal='Body',bold='BodyBold',italic='BodyItalic',boldItalic='BodyBold')
+elif Path('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf').exists():
+    LINUX_FONTS=Path('/usr/share/fonts/truetype/dejavu')
+    for name,file in [('Body','DejaVuSans.ttf'),('BodyBold','DejaVuSans-Bold.ttf'),('BodyItalic','DejaVuSans-Oblique.ttf'),('Mono','DejaVuSansMono.ttf')]:
+        pdfmetrics.registerFont(TTFont(name,str(LINUX_FONTS/file)))
+    pdfmetrics.registerFontFamily('Body',normal='Body',bold='BodyBold',italic='BodyItalic',boldItalic='BodyBold')
+    pdfmetrics.registerFontFamily('Mono',normal='Mono',bold='Mono',italic='Mono',boldItalic='Mono')
 else:
     for name,base in [('Body','Helvetica'),('BodyBold','Helvetica-Bold'),('BodyItalic','Helvetica-Oblique'),('Mono','Courier')]:
         pdfmetrics.registerFont(pdfmetrics.Font(name,base,'WinAnsiEncoding'))

@@ -14,8 +14,8 @@ Os números seguem a seção “Dados a considerar” do PDF. A coluna de evidê
 | 8 | Mais de um convênio por paciente | PatientInsurance com múltiplos vínculos |
 | 9 | Convênio para vários pacientes | PatientInsurance.insurance_id |
 | 10 | Carteirinha e situação no vínculo | PatientInsurance.card_number/status; adesão em joined_at |
-| 11 | Várias alergias por paciente | patient_allergy; cadastro e prontuário |
-| 12 | Alergia em vários pacientes | patient_allergy; catálogo Allergy |
+| 11 | Várias alergias por paciente | patient_allergy; campo de alergias em texto livre no cadastro e no prontuário (services.allergies_from_text) |
+| 12 | Alergia em vários pacientes | patient_allergy; catálogo Allergy reaproveitado sem duplicar nomes |
 | 13 | Paciente possui prontuário | Criação automática de MedicalRecord no cadastro |
 | 14 | Prontuário de um único paciente | MedicalRecord.patient_id obrigatório e único |
 | 15 | Vários exames por consulta | Consultation.exam_requests |
@@ -54,7 +54,7 @@ Os números seguem a seção “Dados a considerar” do PDF. A coluna de evidê
 
 | Item | Evidência |
 |---|---|
-| Dados completos de paciente e profissional | models.py e formulários de cadastro |
+| Dados completos de paciente e profissional | models.py e formulários de cadastro; validação de CPF, telefone, e-mail e endereço em services.py |
 | Data e horário de consulta | Consultation.attended_at |
 | Queixa, observações, diagnóstico e conduta | Formulário de atendimento e registro clínico |
 | Datas, situação e resultado de exame | ExamRequest e acompanhamento de solicitações |

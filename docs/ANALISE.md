@@ -22,8 +22,8 @@ Paciente é uma entidade do domínio, sem portal próprio nesta implementação.
 | ID | Requisito | Critério de aceitação |
 |---|---|---|
 | RF01 | Autenticar usuário e autorizar por perfil | Rotas rejeitam acesso de perfis não autorizados |
-| RF02 | Cadastrar e editar pacientes | CPF único, dados obrigatórios e prontuário criado automaticamente |
-| RF03 | Registrar alergias | Um paciente pode ter diversas alergias, compartilhadas com outros pacientes |
+| RF02 | Cadastrar e editar pacientes | CPF único com 11 dígitos válidos; telefone com DDD (10 ou 11 dígitos); e-mail com @; endereço com logradouro, número, complemento, bairro, cidade, estado e ponto de referência; prontuário criado automaticamente |
+| RF03 | Registrar alergias | Alergias digitadas em texto livre, separadas por vírgula; cada uma é associada ao catálogo (ou incluída nele), permitindo várias alergias por paciente e a mesma alergia em vários pacientes |
 | RF04 | Manter prontuário e histórico | Exibir consultas, diagnósticos, condutas e vínculos com exames/prescrições |
 | RF05 | Cadastrar profissionais | Registrar dados pessoais, registro profissional e CRM/UF para médicos |
 | RF06 | Cadastrar especialidades | Código, nome e descrição |
@@ -51,6 +51,7 @@ Paciente é uma entidade do domínio, sem portal próprio nesta implementação.
 | RF28 | Consultar procedimentos por período | Mostrar execução, responsável, paciente e valor |
 | RF29 | Exportar e imprimir relatórios | CSV em português e impressão pelo navegador |
 | RF30 | Registrar operações | Guardar usuário, data e operação de alteração bem-sucedida |
+| RF31 | Excluir ou arquivar paciente | Paciente sem agendamentos é excluído; com histórico, é arquivado, sai das listas e do agendamento e pode ser restaurado, preservando consultas e financeiro |
 
 ## Requisitos não funcionais
 
@@ -106,9 +107,11 @@ Não foi realizado teste de carga nem estabelecido SLA. Não se afirma conformid
 | DA09 | Pagamentos são separados por responsável e não superam seu saldo | Evitar que pagamento do paciente liquide parte do convênio indevidamente |
 | DA10 | Apenas pagamentos com situação Pago compõem recebimentos | Pendente e Cancelado não são caixa recebido |
 | DA11 | Faturamento por emissão e recebimento por data de pagamento | Distinguir competência e caixa |
-| DA12 | Consulta e prontuário sem exclusão pela interface | Preservar histórico; cancelamentos mantêm registros |
+| DA12 | Consulta e prontuário sem exclusão pela interface; paciente com histórico é arquivado, não apagado | Preservar histórico clínico e financeiro; o arquivamento cancela agendamentos futuros e pode ser desfeito |
 | DA13 | Médico edita seus atendimentos e visualiza o histórico completo dos pacientes | Combinar responsabilidade de autoria com continuidade do cuidado no protótipo |
 | DA14 | Até oito medicamentos em cada formulário de prescrição | Limite da interface, sem limite equivalente na relação do banco |
+| DA15 | Máscaras de CPF e telefone no navegador e validação repetida no servidor | Impedir letras e tamanhos inválidos sem depender apenas do JavaScript |
+| DA16 | Endereço do paciente armazenado em partes e também como texto completo | Permitir validação de cada parte e manter a exibição nas listas |
 
 ## Estados principais
 
