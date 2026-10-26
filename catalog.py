@@ -8,12 +8,20 @@ def catalog(model, title, singular, fields, columns, roles=('admin',)):
     return dict(model=model, title=title, singular=singular, fields=fields, columns=columns, roles=roles)
 
 F = field
+UFS = [('AC','Acre'),('AL','Alagoas'),('AP','Amapá'),('AM','Amazonas'),('BA','Bahia'),('CE','Ceará'),('DF','Distrito Federal'),
+ ('ES','Espírito Santo'),('GO','Goiás'),('MA','Maranhão'),('MT','Mato Grosso'),('MS','Mato Grosso do Sul'),('MG','Minas Gerais'),
+ ('PA','Pará'),('PB','Paraíba'),('PR','Paraná'),('PE','Pernambuco'),('PI','Piauí'),('RJ','Rio de Janeiro'),('RN','Rio Grande do Norte'),
+ ('RS','Rio Grande do Sul'),('RO','Rondônia'),('RR','Roraima'),('SC','Santa Catarina'),('SP','São Paulo'),('SE','Sergipe'),('TO','Tocantins')]
 CATALOGS = {
  'pacientes': catalog(Patient,'Pacientes','paciente',[
     F('name','Nome completo'),F('cpf','CPF'),F('birth_date','Data de nascimento','date'),
     F('sex','Sexo','select',choices=['Feminino','Masculino','Outro','Não informado']),
-    F('phone','Telefone'),F('email','E-mail','email',False),F('address','Endereço'),
-    F('allergies','Alergias','multi',False,model=Allergy)],
+    F('phone','Telefone'),F('email','E-mail','email',False),
+    F('_endereco','Endereço','heading',False),
+    F('street','Logradouro'),F('number','Número'),F('complement','Complemento','text',False),
+    F('neighborhood','Bairro'),F('city','Cidade'),F('state','Estado','select',choices=UFS),
+    F('reference','Ponto de referência','text',False),
+    F('allergies','Alergias','allergies',False)],
     [('name','Paciente'),('cpf','CPF'),('birth_date','Nascimento'),('phone','Telefone')],('admin','recepcao')),
  'profissionais': catalog(Professional,'Profissionais','profissional',[
     F('name','Nome completo'),F('cpf','CPF'),F('birth_date','Data de nascimento','date'),

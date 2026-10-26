@@ -66,3 +66,26 @@ document.querySelectorAll('form[method=post]').forEach(form => form.addEventList
   const button = form.querySelector('button[type=submit], button:not([type])');
   if (button) { button.disabled = true; button.dataset.originalText = button.textContent; }
 }));
+// Máscaras dos cadastros: só aceitam dígitos e limitam ao tamanho do documento.
+const masks = {
+  cpf: d => d.slice(0, 11).replace(/^(\d{3})(\d)/, '$1.$2').replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3').replace(/\.(\d{3})(\d{1,2})$/, '.$1-$2'),
+  phone: d => {
+    d = d.slice(0, 11);
+    if (d.length <= 2) return d ? `(${d}` : '';
+    const tail = d.length === 11 ? 5 : 4;
+    return `(${d.slice(0, 2)}) ${d.slice(2, 2 + tail)}${d.length > 2 + tail ? '-' + d.slice(2 + tail) : ''}`;
+  },
+};
+document.querySelectorAll('[data-mask]').forEach(input => {
+  const apply = event => {
+    if (input.dataset.mask === 'house-number') {
+      const v = input.value.toUpperCase();
+      const deleting = event?.inputType?.startsWith('delete');
+      input.value = /^S/.test(v) ? (deleting ? '' : 'S/N') : v.replace(/\D/g, '').slice(0, 6);
+      return;
+    }
+    input.value = masks[input.dataset.mask](input.value.replace(/\D/g, ''));
+  };
+  input.addEventListener('input', apply);
+  apply();
+});

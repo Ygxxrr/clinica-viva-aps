@@ -32,6 +32,9 @@ app.config.update(SECRET_KEY=secret or 'local-development-only-change-before-dep
  SESSION_COOKIE_HTTPONLY=True,SESSION_COOKIE_SAMESITE='Lax',SESSION_COOKIE_SECURE=bool(os.environ.get('VERCEL')),
  PERMANENT_SESSION_LIFETIME=timedelta(hours=4),MAX_CONTENT_LENGTH=1024*1024)
 db.init_app(app)
+with app.app_context():
+    try: upgrade_schema()
+    except Exception: app.logger.exception('Falha ao atualizar a estrutura do banco.')
 DEMO_MODE=os.environ.get('DEMO_MODE','true').lower()=='true'
 
 @event.listens_for(Engine,'connect')
@@ -68,7 +71,7 @@ def context():
     return dict(catalogs=CATALOGS,today=today_local(),now=now_local(),demo_mode=DEMO_MODE,
       can_clinical=g.user is not None and g.user.role in ('admin','medico'),
       can_reception=g.user is not None and g.user.role in ('admin','recepcao'),
-      can_finance=g.user is not None and g.user.role in ('admin','financeiro'),label=label)
+      can_finance=g.user is not None and g.user.role in ('admin','financeiro'),label=label,format_cpf=format_cpf)
 
 def label(obj):
     if obj is None:return '—'
@@ -201,8 +204,7 @@ def record_update(patient_id):
     patient=db.get_or_404(Patient,patient_id)
     if not patient.record: patient.record=MedicalRecord()
     patient.record.notes=request.form.get('notes','').strip()
-    ids=request.form.getlist('allergies')
-    patient.allergies=[get(Allergy,i) for i in dict.fromkeys(ids)]
+    patient.allergies=allergies_from_text(request.form.get('allergies',''))
     commit(f'Atualizou prontuário do paciente #{patient.id}')
     return redirect(url_for('patient_detail',patient_id=patient.id))
 
@@ -370,13 +372,13 @@ def tutorial():
 @app.cli.command('init-db')
 def init_db():
     from seed import seed
-    db.create_all()
+    db.create_all();upgrade_schema()
     if DEMO_MODE:seed()
     print('Banco inicializado. Dados fictícios carregados.' if DEMO_MODE else 'Estrutura do banco inicializada.')
 
 if __name__=='__main__':
     with app.app_context():
         from seed import seed
-        db.create_all()
+        db.create_all();upgrade_schema()
         if DEMO_MODE:seed()
     app.run(host='127.0.0.1',port=5000,debug=False)

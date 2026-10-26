@@ -34,6 +34,43 @@ def cpf_digits(value):
         if (0 if check == 10 else check) != int(digits[n]): raise BusinessError('CPF inválido: dígitos verificadores não conferem.')
     return digits
 
+def format_cpf(digits):
+    digits = re.sub(r'\D', '', digits or '')
+    return f'{digits[:3]}.{digits[3:6]}.{digits[6:9]}-{digits[9:]}' if len(digits) == 11 else digits
+
+def phone_number(value):
+    digits = re.sub(r'\D', '', value)
+    if re.search(r'[^\d\s()+-]', value) or len(digits) not in (10, 11):
+        raise BusinessError('Telefone inválido: use DDD + número, com 10 dígitos (fixo) ou 11 dígitos (celular).')
+    if digits[0] == '0' or digits[1] == '0': raise BusinessError('Telefone inválido: DDD não pode começar ou terminar com 0.')
+    if len(digits) == 11 and digits[2] != '9': raise BusinessError('Celular inválido: depois do DDD o número deve começar com 9.')
+    return f'({digits[:2]}) {digits[2:-4]}-{digits[-4:]}'
+
+def address_number(value):
+    value = value.upper().replace(' ', '')
+    if value in ('SN', 'S/N'): return 'S/N'
+    if not re.fullmatch(r'\d{1,6}', value): raise BusinessError('Número do endereço deve conter apenas dígitos (ou S/N).')
+    return value
+
+def allergies_from_text(text):
+    """Converte o texto livre ('Látex, amendoim') em alergias do catálogo, criando as que ainda não existem."""
+    result, seen = [], set()
+    for raw in re.split(r'[,;\n]', str(text or '')):
+        name = ' '.join(raw.split())
+        if not name or name.casefold() in seen: continue
+        if len(name) > 120: raise BusinessError('Nome de alergia excede 120 caracteres.')
+        seen.add(name.casefold())
+        allergy = next((a for a in db.session.scalars(select(Allergy)) if a.name.casefold() == name.casefold()), None)
+        if allergy is None:
+            allergy = Allergy(name=name[0].upper() + name[1:], description='')
+            db.session.add(allergy)
+        result.append(allergy)
+    return result
+
+def compose_address(p):
+    line = f'{p.street}, {p.number}' + (f' - {p.complement}' if p.complement else '')
+    return f'{line} - {p.neighborhood}, {p.city}/{p.state}'[:240]
+
 def parse_date(value):
     try: return date.fromisoformat(str(value))
     except ValueError: raise BusinessError('Informe uma data válida.')
@@ -46,6 +83,10 @@ def save_catalog(meta, data, obj=None):
     obj = obj or meta['model']()
     for f in meta['fields']:
         key, kind = f['key'], f['kind']
+        if kind == 'heading': continue
+        if kind == 'allergies':
+            setattr(obj, key, allergies_from_text(data.get(key, '')))
+            continue
         if kind == 'multi':
             ids = data.getlist(key)
             if f['required'] and not ids: raise BusinessError(f'Selecione {f["label"]}.')
@@ -53,20 +94,23 @@ def save_catalog(meta, data, obj=None):
             continue
         value = required(data,key,f['label']) if f['required'] else str(data.get(key,'')).strip()
         if key == 'cpf': value = cpf_digits(value)
+        if key == 'phone': value = phone_number(value)
+        if key == 'number' and isinstance(obj, Patient): value = address_number(value)
         if key == 'cnpj':
             value = re.sub(r'\D','',value)
             if len(value) != 14: raise BusinessError('CNPJ deve conter 14 dígitos.')
         if kind == 'date': value = parse_date(value)
         if key == 'birth_date' and value > today_local(): raise BusinessError('Nascimento não pode estar no futuro.')
         if kind == 'money': value = money(value)
-        if kind == 'select' and value not in f['choices']: raise BusinessError('Opção inválida.')
+        if kind == 'select' and value not in [c[0] if isinstance(c, tuple) else c for c in f['choices']]: raise BusinessError('Opção inválida.')
         if kind == 'relation': value = get(f['model'],value).id
         if kind == 'email' and value and not re.fullmatch(r'[^\s@]+@[^\s@]+\.[^\s@]+',value): raise BusinessError('E-mail inválido.')
         if key == 'crm_state': value = value.upper()
         if key in obj.__table__.columns and isinstance(value,str):
             length = getattr(obj.__table__.columns[key].type,'length',None)
             if length and len(value)>length: raise BusinessError(f'{f["label"]} excede {length} caracteres.')
-        setattr(obj,key,value or None if key in ('crm','crm_state') else value)
+        setattr(obj,key,value or None if key in ('crm','crm_state','complement','reference') else value)
+    if isinstance(obj,Patient): obj.address = compose_address(obj)
     if isinstance(obj,Professional):
         if obj.kind == 'Médico' and (not obj.crm or len(obj.crm_state or '') != 2 or not obj.specialties):
             raise BusinessError('Médico precisa de CRM, UF e pelo menos uma especialidade.')

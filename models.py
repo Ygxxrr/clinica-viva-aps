@@ -78,8 +78,17 @@ class Patient(db.Model):
     sex = db.Column(db.String(30), nullable=False)
     phone = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(160), default='')
-    address = db.Column(db.String(240), nullable=False)
+    address = db.Column(db.String(240), nullable=False)  # endereço completo montado a partir das partes abaixo
+    street = db.Column(db.String(160))
+    number = db.Column(db.String(10))
+    complement = db.Column(db.String(80))
+    neighborhood = db.Column(db.String(80))
+    city = db.Column(db.String(80))
+    state = db.Column(db.String(2))
+    reference = db.Column(db.String(160))
     allergies = db.relationship('Allergy', secondary=patient_allergy, backref='patients')
+    @property
+    def allergy_text(self): return ', '.join(a.name for a in self.allergies)
     record = db.relationship('MedicalRecord', back_populates='patient', uselist=False, cascade='all, delete-orphan')
     insurances = db.relationship('PatientInsurance', back_populates='patient')
 
@@ -238,3 +247,15 @@ class AuditLog(db.Model):
     action = db.Column(db.String(240), nullable=False)
     created_at = db.Column(db.DateTime, default=now_local, nullable=False)
     user = db.relationship('User')
+
+def upgrade_schema():
+    """Adiciona colunas novas em bancos já existentes (create_all não altera tabelas criadas)."""
+    from sqlalchemy import inspect, text
+    inspector = inspect(db.engine)
+    if not inspector.has_table('patient'): return
+    existing = {c['name'] for c in inspector.get_columns('patient')}
+    missing = [c for c in Patient.__table__.columns if c.name not in existing]
+    if not missing: return
+    with db.engine.begin() as conn:
+        for column in missing:
+            conn.execute(text(f'ALTER TABLE patient ADD COLUMN {db.engine.dialect.identifier_preparer.quote(column.name)} {column.type.compile(db.engine.dialect)}'))

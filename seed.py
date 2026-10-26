@@ -34,7 +34,7 @@ def seed():
     patients=[]
     today=today_local()
     for i,n in enumerate(names):
-        p=Patient(name=n,cpf=fake_cpf(800000100+i),birth_date=date(1985+i,2,10),sex='Feminino' if i%2==0 else 'Masculino',phone=f'(11) 0000-{6000+i}',email=f'paciente{i}@example.com',address=f'Rua Fictícia, {i+1} • Dados de demonstração',record=MedicalRecord(notes='Prontuário de demonstração, sem informações reais.'))
+        p=Patient(name=n,cpf=fake_cpf(800000100+i),birth_date=date(1985+i,2,10),sex='Feminino' if i%2==0 else 'Masculino',phone=f'(11) 0000-{6000+i}',email=f'paciente{i}@example.com',address=f'Rua Fictícia, {i+1} - Centro, São Paulo/SP',street='Rua Fictícia',number=str(i+1),neighborhood='Centro',city='São Paulo',state='SP',reference='Dados de demonstração',record=MedicalRecord(notes='Prontuário de demonstração, sem informações reais.'))
         if i%4==0: p.allergies=[allergies[i%3]]
         p.insurances=[PatientInsurance(insurance=insurers[i%2],card_number=f'DEMO-{10000+i}',joined_at=today-timedelta(days=90),status='Ativo')]
         patients.append(p)

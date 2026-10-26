@@ -63,12 +63,34 @@ class SystemTest(unittest.TestCase):
         self.assertNotIn(f'data-selected-appointment="{foreign.id}"',response.get_data(as_text=True))
         self.assertEqual(self.client.get('/?day=not-a-date').status_code,422)
     def test_patient_record_created_and_duplicate_cpf(self):
-        data=dict(name='Paciente Teste',cpf=fake_cpf(777000100),birth_date='1998-01-01',sex='Não informado',phone='0000',email='test@example.com',address='Endereço fictício')
+        data=dict(name='Paciente Teste',cpf=fake_cpf(777000100),birth_date='1998-01-01',sex='Não informado',phone='(11) 91234-5678',email='test@example.com',
+          street='Rua Teste',number='10',neighborhood='Centro',city='São Paulo',state='SP',allergies='látex, Amendoim')
         r=self.post('/cadastros/pacientes/novo',data);self.assertEqual(r.status_code,302)
         p=db.session.scalar(select(Patient).where(Patient.cpf==data['cpf']))
         self.assertIsNotNone(p.record)
         self.assertEqual(self.post('/cadastros/pacientes/novo',data).status_code,409)
         self.assertEqual(Patient.query.filter_by(cpf=data['cpf']).count(),1)
+    def test_patient_fields_validation(self):
+        base=dict(name='Paciente Validação',cpf=fake_cpf(777000200),birth_date='1990-05-05',sex='Feminino',phone='(11) 3234-5678',
+          email='ok@example.com',street='Av. Teste',number='S/N',complement='Apto 3',neighborhood='Jardim',city='Campinas',state='SP',reference='Perto da praça',allergies='Látex; poeira, Poeira')
+        self.assertEqual(self.post('/cadastros/pacientes/novo',base).status_code,302)
+        p=db.session.scalar(select(Patient).where(Patient.cpf==base['cpf']))
+        self.assertEqual(p.phone,'(11) 3234-5678')
+        self.assertEqual(p.address,'Av. Teste, S/N - Apto 3 - Jardim, Campinas/SP')
+        self.assertEqual(sorted(a.name for a in p.allergies),['Látex','Poeira'])
+        self.assertEqual(Allergy.query.filter(Allergy.name=='Látex').count(),1)
+        for key,bad in [('cpf','123abc'),('cpf',fake_cpf(777000300)+'9'),('phone','11abc12345'),('phone','119123'),('phone','(11) 81234-5678'),
+                        ('email','semarroba.com'),('number','12a'),('state','XX'),('street','')]:
+            with self.subTest(key=key,value=bad):
+                data={**base,'cpf':fake_cpf(777000400),key:bad}
+                self.assertEqual(self.post('/cadastros/pacientes/novo',data).status_code,422)
+        page=self.client.get(f'/cadastros/pacientes/{p.id}/editar').get_data(as_text=True)
+        self.assertIn(format_cpf(p.cpf),page);self.assertIn('Látex, Poeira',page)
+    def test_record_allergies_free_text(self):
+        p=db.session.get(Patient,1)
+        self.post(f'/pacientes/{p.id}/prontuario',{'notes':'x','allergies':'Ibuprofeno, dipirona'})
+        db.session.refresh(p)
+        self.assertEqual(sorted(a.name for a in p.allergies),['Dipirona','Ibuprofeno'])
     def test_invalid_cpf(self):
         with self.assertRaises(BusinessError):cpf_digits('11111111111')
         with self.assertRaises(BusinessError):cpf_digits('12345678900')
