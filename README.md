@@ -28,10 +28,10 @@ Senha para todos: `Clinica2026!`.
 
 | Perfil | E-mail | Acesso |
 |---|---|---|
-| Administrador | admin@clinica.demo | Todos os módulos |
-| Recepção | recepcao@clinica.demo | Pacientes, convênios e agendamentos |
-| Médico | medico@clinica.demo | Agenda própria, atendimentos próprios e histórico dos pacientes |
-| Financeiro | financeiro@clinica.demo | Cobranças, pagamentos e relatórios |
+| Administrador | admin@clinicasilva.com.br | Todos os módulos |
+| Recepção | recepcao@clinicasilva.com.br | Pacientes, convênios e agendamentos |
+| Médico | medico@clinicasilva.com.br | Agenda própria, atendimentos próprios e histórico dos pacientes |
+| Financeiro | financeiro@clinicasilva.com.br | Cobranças, pagamentos e relatórios |
 
 Dados inteiramente fictícios. O modo demonstrativo divulga intencionalmente suas contas. Não usar com pacientes reais. Este protótipo não substitui um sistema clínico homologado e não implementa assinatura digital de receitas, integrações com operadoras ou obrigações regulatórias de uma operação real.
 

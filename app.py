@@ -33,8 +33,13 @@ app.config.update(SECRET_KEY=secret or 'local-development-only-change-before-dep
  PERMANENT_SESSION_LIFETIME=timedelta(hours=4),MAX_CONTENT_LENGTH=1024*1024)
 db.init_app(app)
 with app.app_context():
-    try: upgrade_schema()
-    except Exception: app.logger.exception('Falha ao atualizar a estrutura do banco.')
+    try:
+        upgrade_schema()
+        from seed import refresh_sample_data
+        refresh_sample_data()
+    except Exception:
+        db.session.rollback()
+        app.logger.exception('Falha ao atualizar a estrutura do banco.')
 DEMO_MODE=os.environ.get('DEMO_MODE','true').lower()=='true'
 
 @event.listens_for(Engine,'connect')

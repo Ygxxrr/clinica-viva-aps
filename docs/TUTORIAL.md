@@ -8,10 +8,10 @@ Entre com um dos perfis de demonstração. Todos usam a senha `Clinica2026!`. Us
 
 | Perfil | E-mail | O que pode fazer |
 | --- | --- | --- |
-| Administrador | admin@clinica.demo | Acessar todos os módulos e manter os cadastros de apoio. |
-| Recepção | recepcao@clinica.demo | Gerenciar pacientes, vínculos com convênios e agendamentos. |
-| Médico | medico@clinica.demo | Ver a própria agenda, registrar seus atendimentos e consultar o histórico dos pacientes. |
-| Financeiro | financeiro@clinica.demo | Gerenciar cobranças, pagamentos e relatórios financeiros. |
+| Administrador | admin@clinicasilva.com.br | Acessar todos os módulos e manter os cadastros de apoio. |
+| Recepção | recepcao@clinicasilva.com.br | Gerenciar pacientes, vínculos com convênios e agendamentos. |
+| Médico | medico@clinicasilva.com.br | Ver a própria agenda, registrar seus atendimentos e consultar o histórico dos pacientes. |
+| Financeiro | financeiro@clinicasilva.com.br | Gerenciar cobranças, pagamentos e relatórios financeiros. |
 
 ### Onde ficam as abas?
 

@@ -25,7 +25,7 @@ class SystemTest(unittest.TestCase):
         with self.client.session_transaction() as s:return s['csrf']
     def post(self,url,data=None,**kwargs):
         return self.client.post(url,data={'csrf':self.token(),**(data or {})},**kwargs)
-    def login(self,email='admin@clinica.demo'):
+    def login(self,email='admin@clinicasilva.com.br'):
         with self.client.session_transaction() as current:
             signed_in=bool(current.get('user_id'))
             token=current.get('csrf')
@@ -40,20 +40,20 @@ class SystemTest(unittest.TestCase):
             with self.subTest(url=url): self.assertEqual(self.client.get(url).status_code,200)
     def test_csrf_and_profile_permissions(self):
         self.assertEqual(self.client.post('/logout').status_code,400)
-        self.login('recepcao@clinica.demo')
+        self.login('recepcao@clinicasilva.com.br')
         self.assertEqual(self.client.get('/financeiro').status_code,403)
         self.assertEqual(self.client.get('/consultas').status_code,403)
         self.assertEqual(self.client.get('/pacientes/1').status_code,200)
-        self.login('financeiro@clinica.demo')
+        self.login('financeiro@clinicasilva.com.br')
         self.assertEqual(self.client.get('/pacientes/1').status_code,403)
         self.assertEqual(self.client.get('/agenda').status_code,403)
-        self.login('medico@clinica.demo')
+        self.login('medico@clinicasilva.com.br')
         c=db.session.scalar(select(Consultation).join(Appointment).where(Appointment.doctor_id!=1))
         self.assertEqual(self.client.get(f'/consultas/{c.id}').status_code,403)
         self.assertEqual(self.client.get('/cadastros/profissionais/novo').status_code,403)
     def test_dashboard_date_selection_preserves_medical_scope(self):
-        self.login('medico@clinica.demo')
-        user=db.session.scalar(select(User).where(User.email=='medico@clinica.demo'))
+        self.login('medico@clinicasilva.com.br')
+        user=db.session.scalar(select(User).where(User.email=='medico@clinicasilva.com.br'))
         own=db.session.scalar(select(Appointment).where(Appointment.doctor_id==user.professional_id,Appointment.status=='Confirmado'))
         foreign=db.session.scalar(select(Appointment).where(Appointment.doctor_id!=user.professional_id))
         response=self.client.get(f'/?day={own.starts_at.date()}&appointment_id={own.id}')
@@ -92,7 +92,7 @@ class SystemTest(unittest.TestCase):
         db.session.refresh(p)
         self.assertEqual(sorted(a.name for a in p.allergies),['Dipirona','Ibuprofeno'])
     def test_patient_delete_and_archive(self):
-        self.login('recepcao@clinica.demo')
+        self.login('recepcao@clinicasilva.com.br')
         data=dict(name='Paciente Sem Histórico',cpf=fake_cpf(777000500),birth_date='1990-01-01',sex='Masculino',phone='(11) 3234-5678',
           street='Rua A',number='1',neighborhood='Centro',city='São Paulo',state='SP',allergies='Látex')
         self.post('/cadastros/pacientes/novo',data)
@@ -115,7 +115,7 @@ class SystemTest(unittest.TestCase):
         self.assertEqual(self.client.get(f'/pacientes/{busy.id}').status_code,200)
         self.post(f'/pacientes/{busy.id}/restaurar')
         db.session.expire_all();self.assertIsNone(db.session.get(Patient,busy.id).archived_at)
-        self.login('medico@clinica.demo')
+        self.login('medico@clinicasilva.com.br')
         self.assertEqual(self.post(f'/pacientes/{busy.id}/excluir').status_code,403)
     def test_invalid_cpf(self):
         with self.assertRaises(BusinessError):cpf_digits('11111111111')
