@@ -86,6 +86,7 @@ class Patient(db.Model):
     city = db.Column(db.String(80))
     state = db.Column(db.String(2))
     reference = db.Column(db.String(160))
+    archived_at = db.Column(db.DateTime)  # paciente arquivado: sai das listas, mas o histórico é preservado
     allergies = db.relationship('Allergy', secondary=patient_allergy, backref='patients')
     @property
     def allergy_text(self): return ', '.join(a.name for a in self.allergies)

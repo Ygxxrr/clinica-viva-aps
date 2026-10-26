@@ -158,7 +158,7 @@ def dashboard():
     received=db.session.scalar(select(func.coalesce(func.sum(Payment.amount),0)).where(Payment.status=='Pago',Payment.paid_at>=month)) if g.user.role in ('admin','financeiro') else None
     consultations=db.session.scalars(clinical_scope(select(Consultation).join(Appointment))).all() if g.user.role in ('admin','medico') else []
     pending_exams=sum(1 for c in consultations for e in c.exam_requests if e.status in ('Solicitado','Agendado'))
-    return render_template('dashboard.html',title='Visão geral',appointments=appointments,patient_count=db.session.scalar(select(func.count(Patient.id))),
+    return render_template('dashboard.html',title='Visão geral',appointments=appointments,patient_count=db.session.scalar(select(func.count(Patient.id)).where(Patient.archived_at.is_(None))),
       received=received,balance=sum((x.balance for x in charges),Decimal('0')),pending_exams=pending_exams,
       appointments_count=len(appointments),consultation_count=len(consultations),selected_day=selected_day,
       selected_appointment=selected_appointment,week_days=week_days,recent_charges=charges[-5:][::-1])
@@ -169,10 +169,13 @@ def catalog_list(slug):
     if not meta: abort(404)
     if g.user.role=='financeiro' and slug not in ('convenios','unidades','especialidades','profissionais'): abort(403)
     if g.user.role=='recepcao' and slug in ('alergias','medicamentos','exames','procedimentos'): abort(403)
-    rows=db.session.scalars(select(meta['model']).order_by(meta['model'].id.desc())).all()
+    query=select(meta['model']).order_by(meta['model'].id.desc())
+    show_archived=slug=='pacientes' and request.args.get('arquivados')=='1'
+    if slug=='pacientes': query=query.where(Patient.archived_at.isnot(None) if show_archived else Patient.archived_at.is_(None))
+    rows=db.session.scalars(query).all()
     q=request.args.get('q','').strip().lower()
     if q: rows=[r for r in rows if q in ' '.join(label(getattr(r,k,None)) for k,_ in meta['columns']).lower()]
-    return render_template('catalog.html',title=meta['title'],meta=meta,slug=slug,rows=rows,can_edit=g.user.role in meta['roles'])
+    return render_template('catalog.html',title=meta['title'],meta=meta,slug=slug,rows=rows,can_edit=g.user.role in meta['roles'],show_archived=show_archived)
 
 @app.route('/cadastros/<slug>/novo',methods=['GET','POST'])
 @app.route('/cadastros/<slug>/<int:row_id>/editar',methods=['GET','POST'])
@@ -187,6 +190,8 @@ def catalog_form(slug,row_id=None):
         commit(f'{"Atualizou" if row_id else "Criou"} {slug} #{obj.id}')
         return redirect(url_for('catalog_list',slug=slug))
     options={f['key']:db.session.scalars(select(f['model']).order_by(f['model'].name if hasattr(f['model'],'name') else f['model'].id)).all() for f in meta['fields'] if f['model']}
+    for key,rows in options.items():
+        options[key]=[r for r in rows if not getattr(r,'archived_at',None) or (obj is not None and getattr(obj,key,None)==r.id)]
     return render_template('form.html',title=f'{"Editar" if obj else "Novo cadastro de"} {meta["singular"]}',meta=meta,obj=obj,options=options,slug=slug)
 
 @app.get('/pacientes/<int:patient_id>')
@@ -197,6 +202,27 @@ def patient_detail(patient_id):
     if g.user.role in ('admin','medico'):
         consultations=db.session.scalars(select(Consultation).join(Appointment).where(Appointment.patient_id==patient.id).order_by(Consultation.attended_at.desc())).all()
     return render_template('patient.html',title=patient.name,patient=patient,consultations=consultations)
+
+@app.post('/pacientes/<int:patient_id>/excluir')
+@roles('admin','recepcao')
+def patient_delete(patient_id):
+    patient=db.get_or_404(Patient,patient_id)
+    name=patient.name
+    result=remove_patient(patient)
+    audit(f'{"Arquivou" if result=="arquivado" else "Excluiu"} paciente #{patient_id}')
+    db.session.commit()
+    flash(f'Cadastro de {name} arquivado. O histórico de consultas e o financeiro foram preservados.' if result=='arquivado' else f'Cadastro de {name} excluído.','success')
+    return redirect(url_for('catalog_list',slug='pacientes'))
+
+@app.post('/pacientes/<int:patient_id>/restaurar')
+@roles('admin','recepcao')
+def patient_restore(patient_id):
+    patient=db.get_or_404(Patient,patient_id)
+    patient.archived_at=None
+    audit(f'Restaurou paciente #{patient_id}')
+    db.session.commit()
+    flash(f'Cadastro de {patient.name} restaurado.','success')
+    return redirect(url_for('catalog_list',slug='pacientes'))
 
 @app.post('/pacientes/<int:patient_id>/prontuario')
 @roles('admin','medico')
@@ -225,7 +251,7 @@ def appointment_new():
     if request.method=='POST':
         obj=schedule(request.form);db.session.flush();commit(f'Agendou atendimento #{obj.id}')
         return redirect(url_for('agenda'))
-    return render_template('appointment_form.html',title='Novo agendamento',patients=db.session.scalars(select(Patient).order_by(Patient.name)).all(),doctors=db.session.scalars(select(Professional).where(Professional.kind=='Médico')).all(),specialties=db.session.scalars(select(Specialty)).all(),units=db.session.scalars(select(Unit)).all())
+    return render_template('appointment_form.html',title='Novo agendamento',patients=db.session.scalars(select(Patient).where(Patient.archived_at.is_(None)).order_by(Patient.name)).all(),doctors=db.session.scalars(select(Professional).where(Professional.kind=='Médico')).all(),specialties=db.session.scalars(select(Specialty)).all(),units=db.session.scalars(select(Unit)).all())
 
 @app.post('/agenda/<int:appointment_id>/situacao')
 @roles('admin','recepcao')

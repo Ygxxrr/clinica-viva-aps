@@ -60,3 +60,4 @@ label{font-size:12px;color:#7e6b8c}input:not([type=checkbox]),select,textarea{bo
 @media print{.main-shell{margin:0;padding:0}.topbar,.sidebar,.aurora-guide-link,.aurora-shortcuts,.aurora-week,.tutorial-toc,.heading-actions{display:none!important}.main-shell main{padding:0}.aurora-workspace,.tutorial-grid{display:block}.aurora-aside{display:block}.aurora-summary{background:#fff;border:1px solid #ddd}.tutorial-section{padding:15px;break-inside:auto}.panel{break-inside:avoid}.focus-avatar{display:none}.tutorial-section p,.tutorial-section li{color:#222}.footer{display:none}}
 .form-section{margin:8px 0 -6px;padding-top:16px;border-top:1px solid #ede6f4;color:#5c496a;font-size:14px;font-weight:700}
 .field-hint{display:block;margin-top:6px;color:#a58eb5;font-size:11px;font-weight:400}
+.row-actions form{display:inline;margin:0}.button.danger{color:#c0392b;border-color:#f0c9c4;background:#fff}.button.danger:hover{background:#fdf0ee;border-color:#e3a49b}

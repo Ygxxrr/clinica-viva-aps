@@ -125,6 +125,7 @@ def schedule(data, obj=None):
     specialty = get(Specialty,data.get('specialty_id'))
     unit = get(Unit,data.get('unit_id'))
     starts = parse_datetime(required(data,'starts_at','data e horário'))
+    if patient.archived_at: raise BusinessError('Paciente arquivado não pode receber novos agendamentos. Restaure o cadastro antes.')
     if doctor.kind != 'Médico': raise BusinessError('O atendimento deve ser agendado com um médico.')
     if specialty not in doctor.specialties: raise BusinessError('O médico não atende a especialidade selecionada.')
     if unit not in doctor.units: raise BusinessError('O médico não atende na unidade selecionada.')
@@ -141,6 +142,18 @@ def schedule(data, obj=None):
     if not obj.status: obj.status='Agendado'
     db.session.add(obj)
     return obj
+
+def remove_patient(patient):
+    """Sem histórico: exclui de vez. Com agendamentos/consultas: arquiva e cancela os horários futuros."""
+    if patient.appointments:
+        patient.archived_at = now_local()
+        for a in patient.appointments:
+            if a.status in ('Agendado','Confirmado') and a.starts_at >= now_local(): a.status = 'Cancelado'
+        return 'arquivado'
+    for link in list(patient.insurances): db.session.delete(link)
+    patient.allergies = []
+    db.session.delete(patient)
+    return 'excluído'
 
 def change_appointment(obj, status):
     allowed = {'Agendado':{'Confirmado','Cancelado','Não compareceu'}, 'Confirmado':{'Cancelado','Não compareceu'}}

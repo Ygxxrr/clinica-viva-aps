@@ -89,3 +89,7 @@ document.querySelectorAll('[data-mask]').forEach(input => {
   input.addEventListener('input', apply);
   apply();
 });
+// Confirmação antes de ações destrutivas. Roda na captura para impedir o bloqueio do botão se o usuário cancelar.
+document.querySelectorAll('form[data-confirm]').forEach(form => form.addEventListener('submit', event => {
+  if (!window.confirm(form.dataset.confirm)) { event.preventDefault(); event.stopImmediatePropagation(); }
+}, true));
