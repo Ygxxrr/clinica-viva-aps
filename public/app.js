@@ -4,7 +4,41 @@ document.querySelectorAll('[data-demo-email]').forEach(button => button.addEvent
   document.querySelector('[name=password]').value = 'Clinica2026!';
   document.querySelector('[name=password]').focus();
 }));
-document.querySelector('[data-menu]')?.addEventListener('click', () => document.querySelector('.sidebar').classList.toggle('open'));
+const mobileMenu = document.querySelector('[data-menu]');
+mobileMenu?.addEventListener('click', () => {
+  const open = document.querySelector('.sidebar').classList.toggle('open');
+  mobileMenu.setAttribute('aria-expanded', String(open));
+});
+const supportMenu = document.querySelector('.nav-details');
+const supportPanel = supportMenu?.querySelector('.subnav');
+function positionSupportMenu() {
+  if (!supportMenu || !supportPanel) return;
+  if (!supportMenu.open || window.innerWidth <= 720) {
+    if (supportPanel.parentElement !== supportMenu) supportMenu.appendChild(supportPanel);
+    return;
+  }
+  // Fora do details, o painel não é recortado pelo conteúdo rolável do menu.
+  if (supportPanel.parentElement !== document.body) document.body.appendChild(supportPanel);
+  const summary = supportMenu.querySelector('summary').getBoundingClientRect();
+  supportPanel.style.top = Math.max(91, Math.min(summary.top, window.innerHeight - supportPanel.offsetHeight - 14)) + 'px';
+}
+supportMenu?.addEventListener('toggle', positionSupportMenu);
+window.addEventListener('resize', positionSupportMenu);
+document.querySelector('.sidebar nav')?.addEventListener('scroll', positionSupportMenu);
+document.addEventListener('click', event => {
+  if (supportMenu?.open && !supportMenu.contains(event.target) && !supportPanel?.contains(event.target)) supportMenu.open = false;
+  if (window.innerWidth <= 720 && !event.target.closest('.sidebar, [data-menu]')) {
+    document.querySelector('.sidebar')?.classList.remove('open');
+    mobileMenu?.setAttribute('aria-expanded', 'false');
+  }
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    if (supportMenu) supportMenu.open = false;
+    document.querySelector('.sidebar')?.classList.remove('open');
+    mobileMenu?.setAttribute('aria-expanded', 'false');
+  }
+});
 document.querySelectorAll('[data-open]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.open).showModal()));
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => button.closest('dialog').close()));
 document.querySelectorAll('[data-print]').forEach(button => button.addEventListener('click', () => window.print()));

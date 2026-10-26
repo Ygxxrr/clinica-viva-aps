@@ -118,6 +118,8 @@ def health():
 
 @app.route('/login',methods=['GET','POST'])
 def login():
+    if g.user is not None:
+        return redirect(url_for('dashboard'))
     if request.method=='POST':
         user=db.session.scalar(select(User).where(User.email==request.form.get('email','').strip().lower()))
         if user and user.verify_password(request.form.get('password','')):
@@ -141,15 +143,22 @@ def allowed_consultation(obj):
 
 @app.get('/')
 def dashboard():
-    appointments=db.session.scalars(clinical_scope(select(Appointment)).where(func.date(Appointment.starts_at)==today_local()).order_by(Appointment.starts_at)).all()
-    charges=db.session.scalars(select(Charge)).all() if g.user.role in ('admin','financeiro') else []
+    selected_day=parse_date(request.args['day']) if request.args.get('day') else today_local()
+    appointments=db.session.scalars(clinical_scope(select(Appointment)).where(func.date(Appointment.starts_at)==selected_day).order_by(Appointment.starts_at)).all()
+    selected_appointment=next((a for a in appointments if str(a.id)==request.args.get('appointment_id')),None)
+    if selected_appointment is None:
+        selected_appointment=next((a for a in appointments if a.status in ('Agendado','Confirmado')),appointments[0] if appointments else None)
+    monday=selected_day-timedelta(days=selected_day.weekday())
+    week_days=[monday+timedelta(days=i) for i in range(7)]
+    charges=db.session.scalars(select(Charge).order_by(Charge.id)).all() if g.user.role in ('admin','financeiro') else []
     month=today_local().replace(day=1)
     received=db.session.scalar(select(func.coalesce(func.sum(Payment.amount),0)).where(Payment.status=='Pago',Payment.paid_at>=month)) if g.user.role in ('admin','financeiro') else None
     consultations=db.session.scalars(clinical_scope(select(Consultation).join(Appointment))).all() if g.user.role in ('admin','medico') else []
     pending_exams=sum(1 for c in consultations for e in c.exam_requests if e.status in ('Solicitado','Agendado'))
     return render_template('dashboard.html',title='Visão geral',appointments=appointments,patient_count=db.session.scalar(select(func.count(Patient.id))),
       received=received,balance=sum((x.balance for x in charges),Decimal('0')),pending_exams=pending_exams,
-      appointments_count=len(appointments),consultation_count=len(consultations))
+      appointments_count=len(appointments),consultation_count=len(consultations),selected_day=selected_day,
+      selected_appointment=selected_appointment,week_days=week_days,recent_charges=charges[-5:][::-1])
 
 @app.get('/cadastros/<slug>')
 def catalog_list(slug):
@@ -353,6 +362,10 @@ def audit_list():return render_template('audit.html',title='Registro de atividad
 
 @app.get('/sobre')
 def about():return render_template('about.html',title='Sobre o projeto')
+
+@app.get('/tutorial')
+def tutorial():
+    return render_template('tutorial.html',title='Guia do sistema')
 
 @app.cli.command('init-db')
 def init_db():

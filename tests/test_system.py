@@ -26,10 +26,14 @@ class SystemTest(unittest.TestCase):
     def post(self,url,data=None,**kwargs):
         return self.client.post(url,data={'csrf':self.token(),**(data or {})},**kwargs)
     def login(self,email='admin@clinica.demo'):
+        with self.client.session_transaction() as current:
+            signed_in=bool(current.get('user_id'))
+            token=current.get('csrf')
+        if signed_in:self.client.post('/logout',data={'csrf':token})
         self.client.get('/login')
         return self.post('/login',{'email':email,'password':'Clinica2026!'})
     def test_all_pages_render(self):
-        urls=['/','/agenda','/agenda/novo','/consultas','/consultas/1','/pacientes/1','/solicitacoes','/financeiro','/relatorios','/relatorios/exportar','/auditoria','/sobre','/health']
+        urls=['/','/agenda','/agenda/novo','/consultas','/consultas/1','/pacientes/1','/solicitacoes','/financeiro','/relatorios','/relatorios/exportar','/auditoria','/sobre','/tutorial','/health']
         urls += [f'/cadastros/{s}' for s in CATALOGS]
         urls += [f'/cadastros/{s}/novo' for s in CATALOGS]
         for url in urls:
@@ -47,6 +51,17 @@ class SystemTest(unittest.TestCase):
         c=db.session.scalar(select(Consultation).join(Appointment).where(Appointment.doctor_id!=1))
         self.assertEqual(self.client.get(f'/consultas/{c.id}').status_code,403)
         self.assertEqual(self.client.get('/cadastros/profissionais/novo').status_code,403)
+    def test_dashboard_date_selection_preserves_medical_scope(self):
+        self.login('medico@clinica.demo')
+        user=db.session.scalar(select(User).where(User.email=='medico@clinica.demo'))
+        own=db.session.scalar(select(Appointment).where(Appointment.doctor_id==user.professional_id,Appointment.status=='Confirmado'))
+        foreign=db.session.scalar(select(Appointment).where(Appointment.doctor_id!=user.professional_id))
+        response=self.client.get(f'/?day={own.starts_at.date()}&appointment_id={own.id}')
+        self.assertEqual(response.status_code,200)
+        self.assertIn(f'data-selected-appointment="{own.id}"',response.get_data(as_text=True))
+        response=self.client.get(f'/?day={own.starts_at.date()}&appointment_id={foreign.id}')
+        self.assertNotIn(f'data-selected-appointment="{foreign.id}"',response.get_data(as_text=True))
+        self.assertEqual(self.client.get('/?day=not-a-date').status_code,422)
     def test_patient_record_created_and_duplicate_cpf(self):
         data=dict(name='Paciente Teste',cpf=fake_cpf(777000100),birth_date='1998-01-01',sex='Não informado',phone='0000',email='test@example.com',address='Endereço fictício')
         r=self.post('/cadastros/pacientes/novo',data);self.assertEqual(r.status_code,302)

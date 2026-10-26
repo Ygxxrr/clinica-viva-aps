@@ -44,3 +44,11 @@ Esses números são da carga demonstrativa após a validação e podem mudar com
 ## Limites dos testes
 
 Não houve teste de carga, teste de concorrência, auditoria independente de segurança nem validação regulatória de prontuário. Os testes automatizados usam SQLite; o fluxo manual publicado foi validado com PostgreSQL. O protótipo usa contas públicas de demonstração e deve receber exclusivamente dados fictícios.
+
+## Atualização Roxo Aurora e tutorial
+
+- Suíte ampliada: **11 testes aprovados**, incluindo restrição de atendimento por médico e seleção de data na tela inicial.
+- Tutorial completo gerado em PDF de sete páginas, com todas as abas, fluxos e limites do protótipo.
+- Menu de cadastros verificado no navegador; painel deslocado para fora da área rolável para evitar recorte.
+- Navegação móvel e tela inicial verificadas em largura de 390 pixels, sem rolagem horizontal.
+- Nenhuma migração de banco foi necessária para a repaginação.

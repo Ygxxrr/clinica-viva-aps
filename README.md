@@ -35,6 +35,12 @@ Senha para todos: `Clinica2026!`.
 
 Dados inteiramente fictícios. O modo demonstrativo divulga intencionalmente suas contas. Não usar com pacientes reais. Este protótipo não substitui um sistema clínico homologado e não implementa assinatura digital de receitas, integrações com operadoras ou obrigações regulatórias de uma operação real.
 
+## Interface e tutorial
+
+A versão atual usa a identidade **Roxo Aurora**, com menu compacto, seleção de data e atendimento na tela inicial e cartão do paciente conectado ao banco. Os acessos respeitam o perfil do usuário.
+
+O tutorial completo está em **Ajuda / Como usar** no sistema e em `public/downloads/Tutorial-Clinica-Silva.pdf`. A versão de texto está em [docs/TUTORIAL.md](docs/TUTORIAL.md). A fonte principal é `templates/tutorial.html`; use `python scripts/generate_tutorial.py` para regenerar o material offline.
+
 ## Funcionalidades
 
 - Cadastro e edição de pacientes, profissionais, especialidades, unidades, convênios, alergias, exames, medicamentos e procedimentos.
