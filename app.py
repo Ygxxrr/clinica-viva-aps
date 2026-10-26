@@ -173,7 +173,7 @@ def catalog_list(slug):
     meta=CATALOGS.get(slug)
     if not meta: abort(404)
     if g.user.role=='financeiro' and slug not in ('convenios','unidades','especialidades','profissionais'): abort(403)
-    if g.user.role=='recepcao' and slug in ('alergias','medicamentos','exames','procedimentos'): abort(403)
+    if g.user.role=='recepcao' and slug in ('medicamentos','exames','procedimentos'): abort(403)
     query=select(meta['model']).order_by(meta['model'].id.desc())
     show_archived=slug=='pacientes' and request.args.get('arquivados')=='1'
     if slug=='pacientes': query=query.where(Patient.archived_at.isnot(None) if show_archived else Patient.archived_at.is_(None))

@@ -126,6 +126,14 @@ class SystemTest(unittest.TestCase):
         self.assertNotIn(e.result,page)
         self.login('medico@clinicasilva.com.br')
         self.assertIn(e.result,self.client.get(f'/pacientes/{pid}').get_data(as_text=True))
+    def test_doctor_registers_medication_and_allergy_catalog_removed(self):
+        self.login('medico@clinicasilva.com.br')
+        self.assertIn('Cadastrar medicamento',self.client.get('/cadastros/medicamentos').get_data(as_text=True))
+        data=dict(name='Ibuprofeno 400 mg',active_ingredient='Ibuprofeno',manufacturer='Genérico',presentation='Comprimido 400 mg')
+        self.assertEqual(self.post('/cadastros/medicamentos/novo',data).status_code,302)
+        self.assertEqual(Medication.query.filter_by(name='Ibuprofeno 400 mg').count(),1)
+        self.assertEqual(self.client.get('/cadastros/alergias').status_code,404)
+        self.assertNotIn('↗',self.client.get('/').get_data(as_text=True))
     def test_invalid_cpf(self):
         with self.assertRaises(BusinessError):cpf_digits('11111111111')
         with self.assertRaises(BusinessError):cpf_digits('12345678900')

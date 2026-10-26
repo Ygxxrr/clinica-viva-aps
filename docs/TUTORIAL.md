@@ -153,9 +153,8 @@ Abra **Cadastros** no menu. Para incluir, use o botão de adicionar; para corrig
 | Profissionais | Dados, categoria, registro, CRM/UF, especialidades e unidades. | Médico precisa de CRM, UF e uma ou mais especialidades. |
 | Convênios | Nome, CNPJ e contato da operadora. | Operadora compartilhada entre vários pacientes. |
 | Planos dos pacientes | Paciente, operadora, carteirinha, adesão e situação. | Guarda os dados próprios do vínculo. |
-| Alergias | Nome e descrição. | Vinculadas ao paciente no prontuário ou cadastro. |
 | Catálogo de exames | Nome, descrição e tipo. | Usado ao criar uma solicitação em uma consulta. |
-| Medicamentos | Nome, princípio ativo, fabricante e apresentação. | Usado nos itens das prescrições. |
+| Medicamentos | Nome, princípio ativo, fabricante e apresentação. Médico e administrador usam **Cadastrar medicamento**. | Usado nos itens das prescrições. |
 | Catálogo de procedimentos | Nome, descrição e valor padrão. | Usado ao registrar execuções em consultas. |
 
 ### Registro de atividades e Sobre o projeto

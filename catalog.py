@@ -40,11 +40,10 @@ CATALOGS = {
     F('patient_id','Paciente','relation',model=Patient),F('insurance_id','Convênio','relation',model=Insurance),
     F('card_number','Número da carteirinha'),F('joined_at','Data de adesão','date'),F('status','Situação','select',choices=['Ativo','Inativo','Suspenso'])],
     [('patient','Paciente'),('insurance','Convênio'),('card_number','Carteirinha'),('status','Situação')],('admin','recepcao')),
- 'alergias': catalog(Allergy,'Alergias','alergia',[F('name','Nome'),F('description','Descrição','textarea',False)], [('name','Nome'),('description','Descrição')],('admin','medico')),
  'exames': catalog(Exam,'Catálogo de exames','exame',[F('name','Nome'),F('kind','Tipo'),F('description','Descrição','textarea',False)], [('name','Exame'),('kind','Tipo'),('description','Descrição')]),
  'medicamentos': catalog(Medication,'Medicamentos','medicamento',[
     F('name','Nome'),F('active_ingredient','Princípio ativo'),F('manufacturer','Fabricante'),F('presentation','Apresentação')],
-    [('name','Medicamento'),('active_ingredient','Princípio ativo'),('presentation','Apresentação')]),
+    [('name','Medicamento'),('active_ingredient','Princípio ativo'),('presentation','Apresentação')],('admin','medico')),
  'procedimentos': catalog(Procedure,'Catálogo de procedimentos','procedimento',[
     F('name','Nome'),F('description','Descrição','textarea',False),F('standard_price','Valor padrão (R$)','money')],
     [('name','Procedimento'),('description','Descrição'),('standard_price','Valor padrão')])
