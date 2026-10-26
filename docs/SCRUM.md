@@ -2,25 +2,25 @@
 
 ## Transparência do registro
 
-Este projeto foi implementado em uma sessão concentrada em 26/10/2026. Não há evidência de sprints anteriores, reuniões passadas, composição do grupo ou divisão real entre integrantes. O quadro abaixo é uma proposta de organização e precisa ser preenchido com o que o grupo realmente realizou. Uma divisão de horas em um único dia é um plano emergencial de entrega; não equivale a afirmar que se praticou integralmente Scrum em ciclos anteriores.
+Este projeto foi implementado em uma sessão concentrada em 26/10/2026. O trabalho foi realizado individualmente e não há registro de sprints anteriores ou reuniões passadas. Os quadros de planejamento abaixo organizam as entregas; o registro de revisões no final deve ser completado com as validações efetivamente feitas. Uma divisão de horas em um único dia é um plano emergencial de entrega; não equivale a afirmar que se praticou integralmente Scrum em ciclos anteriores.
 
 ## Time e squads propostos
 
-Para um grupo de até sete pessoas, recomenda-se um único Scrum Team com frentes de trabalho coordenadas, evitando times pequenos demais. O termo SQUAD é usado no enunciado como organização das frentes; não é um papel oficial do Scrum.
+O projeto foi desenvolvido individualmente por **Ygor Silva Matos (RGM 40986616)**, que acumula todos os papéis do Scrum. As frentes de trabalho abaixo organizam o backlog em três squads lógicas, todas conduzidas pelo mesmo integrante. O termo SQUAD é usado no enunciado como organização das frentes; não é um papel oficial do Scrum.
 
 | Frente / squad | Entregas | Papéis sugeridos |
 |---|---|---|
-| Atendimento e experiência | Pacientes, agenda, consultas, prontuário, exames e prescrições | Developers responsáveis pelo domínio clínico e interface |
-| Gestão e dados | Convênios, unidades, financeiro, relatórios e persistência | Developers responsáveis pelo domínio administrativo e banco |
-| Qualidade e integração (transversal) | Requisitos, diagramas, validação e integração | Developers de qualidade; apoio do Scrum Master |
+| Atendimento e experiência | Pacientes, agenda, consultas, prontuário, exames e prescrições | Developer — Ygor Silva Matos |
+| Gestão e dados | Convênios, unidades, financeiro, relatórios e persistência | Developer — Ygor Silva Matos |
+| Qualidade e integração (transversal) | Requisitos, diagramas, validação e integração | Developer e Scrum Master — Ygor Silva Matos |
 
 | Papel Scrum | Responsabilidade | Integrante real |
 |---|---|---|
-| Product Owner | Ordenar Product Backlog e validar valor das entregas | Preencher nome completo e RGM |
-| Scrum Master | Facilitar eventos, remover impedimentos e apoiar o processo | Preencher nome completo e RGM |
-| Developers | Analisar, implementar, testar, documentar e integrar | Preencher os demais integrantes e contribuições |
+| Product Owner | Ordenar Product Backlog e validar valor das entregas | Ygor Silva Matos — RGM 40986616 |
+| Scrum Master | Facilitar eventos, remover impedimentos e apoiar o processo | Ygor Silva Matos — RGM 40986616 |
+| Developers | Analisar, implementar, testar, documentar e integrar | Ygor Silva Matos — RGM 40986616 |
 
-Não atribuir autoria de uma funcionalidade a quem não a implementou ou estudou. Os membros precisam compreender as entregas que apresentarão.
+Como o time tem um único integrante, a separação entre Product Owner, Scrum Master e Developer é de responsabilidades, não de pessoas: as decisões de prioridade, a remoção de impedimentos e a implementação foram exercidas pelo mesmo membro.
 
 ## Product Goal
 
