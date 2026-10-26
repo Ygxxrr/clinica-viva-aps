@@ -114,7 +114,7 @@ def http_error(error):
 @app.get('/health')
 def health():
     db.session.execute(select(1))
-    return {'status':'ok','application':'Clínica Viva','database':'connected'}
+    return {'status':'ok','application':'Clínica Silva','database':'connected'}
 
 @app.route('/login',methods=['GET','POST'])
 def login():

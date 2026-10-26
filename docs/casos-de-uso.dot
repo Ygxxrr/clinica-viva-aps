@@ -1,5 +1,5 @@
 digraph G {
-graph [rankdir=LR, bgcolor="white", pad=0.5, nodesep=0.35, ranksep=1.2, splines=polyline, fontname="Arial", fontsize=22, label="Clínica Viva · Casos de uso", labelloc=t];
+graph [rankdir=LR, bgcolor="white", pad=0.5, nodesep=0.35, ranksep=1.2, splines=polyline, fontname="Arial", fontsize=22, label="Clínica Silva · Casos de uso", labelloc=t];
 node [fontname="Arial", fontsize=12, color="#75A68E", style=filled, fillcolor="#F0F8F3"];
 edge [fontname="Arial", fontsize=10, color="#789787", fontcolor="#4E7860", arrowsize=0.7];
 Reception [shape=box, fillcolor="#FFFFFF", label="«ator»\nRecepção"];

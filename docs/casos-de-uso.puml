@@ -13,7 +13,7 @@ skinparam rectangle {
  BorderColor #86B5A1
  FontColor #21483C
 }
-title Clínica Viva — Diagrama de casos de uso
+title Clínica Silva — Diagrama de casos de uso
 actor "Recepção" as Reception
 actor "Médico" as Doctor
 actor "Financeiro" as Finance

@@ -1,5 +1,5 @@
 digraph G {
-graph [rankdir=TB, bgcolor="white", pad="0.5", nodesep="0.6", ranksep="1.0", splines=polyline, fontname="Arial", fontsize=22, label="Clínica Viva · Diagrama de classes", labelloc=t];
+graph [rankdir=TB, bgcolor="white", pad="0.5", nodesep="0.6", ranksep="1.0", splines=polyline, fontname="Arial", fontsize=22, label="Clínica Silva · Diagrama de classes", labelloc=t];
 node [shape=plain, fontname="Arial", fontsize=12];
 edge [fontname="Arial", fontsize=10, color="#719487", fontcolor="#47695A", arrowsize=0.7, dir=none];
 subgraph cluster_2 { label="Financeiro"; color="#D5E6DC"; style="rounded"; fontcolor="#638C76"; fontsize=16; margin=25;

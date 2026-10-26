@@ -1,4 +1,4 @@
-# Clínica Viva
+# Clínica Silva
 
 Sistema acadêmico de gestão de clínica médica desenvolvido para Análise e Projeto de Sistemas II. Integra pacientes, agenda, prontuários, exames, prescrições, procedimentos, convênios e financeiro.
 

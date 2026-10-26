@@ -69,7 +69,7 @@ def write_sources():
      'skinparam classAttributeIconSize 0','skinparam linetype ortho','skinparam nodesep 50','skinparam ranksep 70',
      'skinparam class {\n BackgroundColor #F0F8F3\n BorderColor #468C75\n FontColor #234D3C\n}',
      'skinparam package {\n BorderColor #A8C7B5\n BackgroundColor #FAFCFA\n FontColor #4B745C\n}',
-     'title Clínica Viva — Diagrama de classes da implementação']
+     'title Clínica Silva — Diagrama de classes da implementação']
     md=['# Diagrama de classes\n','Os atributos são gerados diretamente de models.py. Os nomes em inglês correspondem ao código. As relações abaixo mostram multiplicidades do domínio; regras como pelo menos uma especialidade para médico são validadas também em services.py.\n',
       'O modelo usa Professional com atributo kind em vez de uma hierarquia de subclasses. A categoria Médico exige CRM/UF e especialidades. O paciente e o médico de uma consulta são derivados do agendamento; o paciente do exame é derivado da consulta.\n',
       'As quatro tabelas associativas sem atributos adicionais são doctor_specialty, professional_unit, unit_specialty e patient_allergy. PatientInsurance, PrescriptionItem e PerformedProcedure são classes associativas com dados próprios.\n',
@@ -107,7 +107,7 @@ def write_sources():
 
 def write_dot():
     for filename,selected in [('classes',[n for group in groups.values() for n in group])]+[(f'classes-{i+1}',names) for i,names in enumerate(groups.values())]:
-        lines=['digraph G {','graph [rankdir=TB, bgcolor="white", pad="0.5", nodesep="0.6", ranksep="1.0", splines=polyline, fontname="Arial", fontsize=22, label="Clínica Viva · Diagrama de classes", labelloc=t];',
+        lines=['digraph G {','graph [rankdir=TB, bgcolor="white", pad="0.5", nodesep="0.6", ranksep="1.0", splines=polyline, fontname="Arial", fontsize=22, label="Clínica Silva · Diagrama de classes", labelloc=t];',
          'node [shape=plain, fontname="Arial", fontsize=12];','edge [fontname="Arial", fontsize=10, color="#719487", fontcolor="#47695A", arrowsize=0.7, dir=none];']
         for i,(group,names) in enumerate(groups.items()):
             chosen=[n for n in names if n in selected]
@@ -131,7 +131,7 @@ def write_dot():
     (DOCS/'casos-de-uso.puml').write_text(source,encoding='utf-8')
     actors=re.findall(r'actor "([^"]+)" as (\w+)',source)
     cases=re.findall(r'usecase "([^"]+)" as (\w+)',source)
-    lines=['digraph G {','graph [rankdir=LR, bgcolor="white", pad=0.5, nodesep=0.35, ranksep=1.2, splines=polyline, fontname="Arial", fontsize=22, label="Clínica Viva · Casos de uso", labelloc=t];',
+    lines=['digraph G {','graph [rankdir=LR, bgcolor="white", pad=0.5, nodesep=0.35, ranksep=1.2, splines=polyline, fontname="Arial", fontsize=22, label="Clínica Silva · Casos de uso", labelloc=t];',
       'node [fontname="Arial", fontsize=12, color="#75A68E", style=filled, fillcolor="#F0F8F3"];',
       'edge [fontname="Arial", fontsize=10, color="#789787", fontcolor="#4E7860", arrowsize=0.7];']
     for title,name in actors:lines.append(f'{name} [shape=box, fillcolor="#FFFFFF", label="«ator»\\n{title}"];')

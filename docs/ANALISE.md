@@ -1,4 +1,4 @@
-# Análise do sistema — Clínica Viva
+# Análise do sistema — Clínica Silva
 
 ## Problema e objetivo
 

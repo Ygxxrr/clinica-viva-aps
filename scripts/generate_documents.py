@@ -96,12 +96,12 @@ def footer(c,doc):
     w,h=doc.pagesize;c.saveState()
     c.setStrokeColor(LINE);c.line(46,38,w-46,38)
     c.setFont('Body',7);c.setFillColor(MUTED)
-    c.drawString(46,25,'CLÍNICA VIVA  /  APS II  /  26.10.2026')
+    c.drawString(46,25,'CLÍNICA SILVA  /  APS II  /  26.10.2026')
     c.drawRightString(w-46,25,str(doc.page))
     c.restoreState()
 
 def cover(title,subtitle):
-    return [Spacer(1,65),Paragraph('CLÍNICA VIVA',ParagraphStyle(name='CoverBrand',fontName='BodyBold',fontSize=13,textColor=TEAL,leading=20,spaceAfter=35)),
+    return [Spacer(1,65),Paragraph('CLÍNICA SILVA',ParagraphStyle(name='CoverBrand',fontName='BodyBold',fontSize=13,textColor=TEAL,leading=20,spaceAfter=35)),
       Paragraph(title,ParagraphStyle(name='CoverTitle',fontName='BodyBold',fontSize=36,leading=43,textColor=INK,spaceAfter=22)),
       Paragraph(subtitle,ParagraphStyle(name='CoverSub',fontName='Body',fontSize=12,leading=20,textColor=MUTED,spaceAfter=35)),
       Paragraph('Análise e Projeto de Sistemas II<br/>26 de outubro de 2026',styles['Text']),
@@ -109,7 +109,7 @@ def cover(title,subtitle):
       Spacer(1,25),Paragraph('Sistema: https://clinica-viva-aps.vercel.app<br/>Código: https://github.com/Ygxxrr/clinica-viva-aps',styles['Text']),PageBreak()]
 
 def build(name,title,subtitle,sources):
-    doc=SimpleDocTemplate(str(OUT/name),pagesize=A4,rightMargin=46,leftMargin=46,topMargin=47,bottomMargin=55,title=title,author='Clínica Viva - Projeto acadêmico')
+    doc=SimpleDocTemplate(str(OUT/name),pagesize=A4,rightMargin=46,leftMargin=46,topMargin=47,bottomMargin=55,title=title,author='Clínica Silva - Projeto acadêmico')
     story=cover(title,subtitle)
     for i,source in enumerate(sources):
         if i:story.append(PageBreak())
@@ -118,7 +118,7 @@ def build(name,title,subtitle,sources):
     print('PDF:',name)
 
 def build_diagrams():
-    target=OUT/'Diagramas-Clinica-Viva.pdf';c=canvas.Canvas(str(target),pagesize=landscape(A3));c.setTitle('Clínica Viva - Diagramas UML')
+    target=OUT/'Diagramas-Clinica-Silva.pdf';c=canvas.Canvas(str(target),pagesize=landscape(A3));c.setTitle('Clínica Silva - Diagramas UML')
     specs=[('casos-de-uso','Casos de uso - visão completa'),('classes','Classes - visão completa (amplie para consultar)'),('classes-1','Classes - cadastros e estrutura'),('classes-2','Classes - atendimento'),('classes-3','Classes - financeiro'),('classes-4','Classes - acesso e rastreabilidade')]
     for i,(file,title) in enumerate(specs):
         drawing=svg2rlg(str(ROOT/'docs'/f'{file}.svg'))
@@ -128,10 +128,10 @@ def build_diagrams():
         scale=min((w-70)/drawing.width,(h-110)/drawing.height)
         drawing.scale(scale,scale);drawing.width*=scale;drawing.height*=scale
         renderPDF.draw(drawing,c,(w-drawing.width)/2,(h-110-drawing.height)/2+45)
-        c.setFillColor(MUTED);c.setFont('Body',8);c.drawString(35,22,'CLÍNICA VIVA / APS II - SVGs vetoriais e fontes editáveis disponíveis no repositório.');c.drawRightString(w-35,22,str(i+1));c.showPage()
+        c.setFillColor(MUTED);c.setFont('Body',8);c.drawString(35,22,'CLÍNICA SILVA / APS II - SVGs vetoriais e fontes editáveis disponíveis no repositório.');c.drawRightString(w-35,22,str(i+1));c.showPage()
     c.save();print('PDF:',target.name)
 
 if __name__=='__main__':
-    build('Documentacao-Clinica-Viva.pdf','Documentação\ndo projeto','Requisitos, regras de negócio, rastreabilidade, organização do trabalho e casos de uso.', ['ANALISE.md','RASTREABILIDADE.md','SCRUM.md','CASOS_DE_USO.md','CLASSES.md'])
-    build('Guia-Apresentacao-Clinica-Viva.pdf','Guia para\na apresentação','Roteiro de demonstração, arquitetura e respostas comentadas para estudar o funcionamento do sistema.', ['APRESENTACAO.md'])
+    build('Documentacao-Clinica-Silva.pdf','Documentação\ndo projeto','Requisitos, regras de negócio, rastreabilidade, organização do trabalho e casos de uso.', ['ANALISE.md','RASTREABILIDADE.md','SCRUM.md','CASOS_DE_USO.md','CLASSES.md'])
+    build('Guia-Apresentacao-Clinica-Silva.pdf','Guia para\na apresentação','Roteiro de demonstração, arquitetura e respostas comentadas para estudar o funcionamento do sistema.', ['APRESENTACAO.md'])
     build_diagrams()

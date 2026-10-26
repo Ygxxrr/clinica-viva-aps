@@ -16,7 +16,7 @@ skinparam package {
  BackgroundColor #FAFCFA
  FontColor #4B745C
 }
-title Clínica Viva — Diagrama de classes da implementação
+title Clínica Silva — Diagrama de classes da implementação
 package "Cadastros e estrutura" {
 class Patient {
   +id: Integer [PK]

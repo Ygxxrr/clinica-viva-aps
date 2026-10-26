@@ -1,4 +1,4 @@
-# Guia de apresentação — Clínica Viva
+# Guia de apresentação — Clínica Silva
 
 ## Explicação inicial, em suas palavras
 
